@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --- المستخدمين ---
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  fullName  String
+  role      String   // "MANAGER" or "SUPERVISOR"
+  logs      SystemLog[]
+}
+
+// --- الطلاب ---
+model Student {
+  id            Int       @id @default(autoincrement())
+  nationalId    String    @unique
+  systemId      String    @unique
+  fullName      String
+  college       String
+  year          String
+  phone         String?
+  parentPhone   String?
+  city          String?
+  roomId        Int?
+  room          Room?     @relation(fields: [roomId], references: [id])
+  attendance    Attendance[]
+  penalties     Penalty[]
+  activities    ActivityParticipant[]
+  isEvacuated   Boolean   @default(false)
+}
+
+// --- الغرف ---
+model Room {
+  id        Int       @id @default(autoincrement())
+  number    String
+  floor     Int
+  wing      String
+  type      String
+  capacity  Int       @default(3)
+  students  Student[]
+  faults    MaintenanceFault[]
+}
+
+// --- الصيانة ---
+model MaintenanceFault {
+  id          Int      @id @default(autoincrement())
+  description String
+  type        String
+  status      String   @default("PENDING")
+  location    String?
+  roomId      Int?
+  room        Room?    @relation(fields: [roomId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+// --- التمام ---
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @default(now())
+  status    String
+  studentId Int
+  student   Student  @relation(fields: [studentId], references: [id])
+}
+
+// --- الجزاءات ---
+model Penalty {
+  id          Int      @id @default(autoincrement())
+  reason      String
+  type        String
+  date        DateTime @default(now())
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+}
+
+// --- الأنشطة ---
+model Activity {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  date         DateTime
+  participants ActivityParticipant[]
+}
+
+model ActivityParticipant {
+  activityId Int
+  studentId  Int
+  activity   Activity @relation(fields: [activityId], references: [id])
+  student    Student  @relation(fields: [studentId], references: [id])
+  @@id([activityId, studentId])
+}
+
+// --- السجلات ---
+model SystemLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  details   String?
+  timestamp DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
