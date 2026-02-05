@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Shield, Globe, LockKeyhole, User } from 'lucide-react';
+import { Eye, EyeOff, Shield, Globe, LockKeyhole, Mail } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
+import { useAuthStore } from '../../viewmodels/useAuthStore';
+
 interface LoginPageProps {
-    onLoginSuccess: (role: string) => void; // عدلنا دي عشان نستقبل دور المستخدم
+    onLoginSuccess: (role: string) => void;
 }
 
 export function LoginPage({ onLoginSuccess }: LoginPageProps) {
+    const login = useAuthStore((state) => state.login);
     const [showPassword, setShowPassword] = useState(false);
     const [language, setLanguage] = useState<'ar' | 'en'>('ar');
     const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +17,7 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
     // State for Form Data
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: ''
     });
 
@@ -23,28 +26,41 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
         setError('');
         setIsLoading(true);
 
-        // محاكاة الاتصال بقاعدة البيانات (مؤقتاً حتى نربط الـ Service)
+        console.log('Attempting login with:', formData);
+
+        // Simulation of API call
         setTimeout(() => {
-            // هنا سيتم استبدال هذا الكود باستدعاء AuthService.login()
-            if (formData.username === 'manager' && formData.password === '123') {
+            if (formData.email === 'manager@system.com' && formData.password === '123') {
                 setIsLoading(false);
+                login({
+                    id: 1,
+                    name: 'المدير العام',
+                    email: 'manager@system.com',
+                    role: 'MANAGER'
+                });
                 onLoginSuccess('manager');
-            } else if (formData.username === 'supervisor' && formData.password === '123') {
+            } else if (formData.email === 'supervisor@system.com' && formData.password === '123') {
                 setIsLoading(false);
+                login({
+                    id: 2,
+                    name: 'مشرف المبنى',
+                    email: 'supervisor@system.com',
+                    role: 'SUPERVISOR'
+                });
                 onLoginSuccess('supervisor');
             } else {
                 setIsLoading(false);
-                setError(language === 'ar' ? 'اسم المستخدم أو كلمة المرور غير صحيحة' : 'Invalid username or password');
+                setError(language === 'ar' ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' : 'Invalid email or password');
             }
-        }, 1500);
+        }, 1000);
     };
 
     const texts = {
         ar: {
             title: 'نظام إدارة السكن الجامعي',
             subtitle: 'بوابة الدخول الموحدة',
-            username: 'اسم المستخدم',
-            usernamePlaceholder: 'أدخل الرقم الوظيفي أو الاسم',
+            email: 'البريد الإلكتروني',
+            emailPlaceholder: 'أدخل البريد الإلكتروني',
             password: 'كلمة المرور',
             passwordPlaceholder: '••••••••',
             login: 'تسجيل الدخول',
@@ -54,8 +70,8 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
         en: {
             title: 'University Housing System',
             subtitle: 'Unified Login Portal',
-            username: 'Username',
-            usernamePlaceholder: 'Enter ID or Username',
+            email: 'Email',
+            emailPlaceholder: 'Enter your email',
             password: 'Password',
             passwordPlaceholder: '••••••••',
             login: 'Sign In',
@@ -107,19 +123,19 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
                     <div className="p-8">
                         <form onSubmit={handleSubmit} className="space-y-5">
 
-                            {/* Username */}
+                            {/* Email */}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-primary flex items-center gap-2">
-                                    <User size={16} className="text-secondary" />
-                                    {t.username}
+                                    <Mail size={16} className="text-secondary" />
+                                    {t.email}
                                 </label>
                                 <div className="relative group">
                                     <input
-                                        type="text"
-                                        value={formData.username}
-                                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         className="w-full px-4 py-3 bg-muted/30 border border-gray-200 rounded-xl focus:bg-white focus:border-secondary focus:ring-4 focus:ring-secondary/10 transition-all outline-none text-primary font-medium placeholder:text-gray-400"
-                                        placeholder={t.usernamePlaceholder}
+                                        placeholder={t.emailPlaceholder}
                                         required
                                     />
                                 </div>

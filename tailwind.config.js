@@ -13,16 +13,28 @@ export default {
                 background: "hsl(var(--background))",
                 foreground: "hsl(var(--foreground))",
                 primary: {
-                    DEFAULT: "#002147", // اللون الكحلي
+                    DEFAULT: "#1e1b4b", // Dark Blue/Purple
                     foreground: "#ffffff",
                 },
                 secondary: {
-                    DEFAULT: "#F2C94C", // اللون الذهبي
-                    foreground: "#002147",
+                    DEFAULT: "#64748b", // Professional Gray/Blue (Slate-500)
+                    foreground: "#ffffff",
+                },
+                destructive: {
+                    DEFAULT: "hsl(var(--destructive))",
+                    foreground: "hsl(var(--destructive-foreground))",
                 },
                 muted: {
                     DEFAULT: "hsl(var(--muted))",
                     foreground: "hsl(var(--muted-foreground))",
+                },
+                accent: {
+                    DEFAULT: "hsl(var(--accent))",
+                    foreground: "hsl(var(--accent-foreground))",
+                },
+                popover: {
+                    DEFAULT: "hsl(var(--popover))",
+                    foreground: "hsl(var(--popover-foreground))",
                 },
                 card: {
                     DEFAULT: "hsl(var(--card))",
@@ -30,7 +42,7 @@ export default {
                 },
             },
             fontFamily: {
-                sans: ['Cairo', 'sans-serif'], // الخط العربي
+                sans: ['Cairo', 'sans-serif'],
             },
         },
     },

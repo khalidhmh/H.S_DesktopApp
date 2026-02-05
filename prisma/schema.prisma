@@ -7,69 +7,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// --- المستخدمين ---
+// --- Enums ---
 model User {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
+  name      String
+  email     String   @unique
   password  String
-  fullName  String
   role      String   // "MANAGER" or "SUPERVISOR"
   logs      SystemLog[]
 }
 
-// --- الطلاب ---
 model Student {
-  id            Int       @id @default(autoincrement())
-  nationalId    String    @unique
-  systemId      String    @unique
-  fullName      String
-  college       String
-  year          String
-  phone         String?
-  parentPhone   String?
-  city          String?
-  roomId        Int?
-  room          Room?     @relation(fields: [roomId], references: [id])
-  attendance    Attendance[]
-  penalties     Penalty[]
-  activities    ActivityParticipant[]
-  isEvacuated   Boolean   @default(false)
+  id              Int       @id @default(autoincrement())
+  name            String
+  universityId    String    @unique
+  nationalId      String    @unique
+  college         String
+  year            String
+  phone           String?
+  guardianContact String?
+  city            String?
+  status          String    @default("ACTIVE") // "ACTIVE", "EVACUATED"
+  
+  roomId          Int?
+  room            Room?     @relation(fields: [roomId], references: [id])
+  
+  attendance      Attendance[]
+  penalties       Penalty[]
+  complaints      Complaint[]
 }
 
-// --- الغرف ---
 model Room {
-  id        Int       @id @default(autoincrement())
-  number    String
-  floor     Int
-  wing      String
-  type      String
-  capacity  Int       @default(3)
-  students  Student[]
-  faults    MaintenanceFault[]
+  id           Int       @id @default(autoincrement())
+  roomNumber   String
+  building     String
+  floor        Int
+  capacity     Int       @default(3)
+  currentCount Int       @default(0)
+  status       String    @default("AVAILABLE") // "AVAILABLE", "MAINTENANCE"
+  
+  students     Student[]
+  faults       MaintenanceFault[]
+
+  @@unique([roomNumber, building])
 }
 
-// --- الصيانة ---
-model MaintenanceFault {
-  id          Int      @id @default(autoincrement())
-  description String
-  type        String
-  status      String   @default("PENDING")
-  location    String?
-  roomId      Int?
-  room        Room?    @relation(fields: [roomId], references: [id])
-  createdAt   DateTime @default(now())
-}
-
-// --- التمام ---
 model Attendance {
   id        Int      @id @default(autoincrement())
   date      DateTime @default(now())
-  status    String
+  status    String   // "PRESENT", "ABSENT", "EXCUSED"
+  note      String?
+  
   studentId Int
   student   Student  @relation(fields: [studentId], references: [id])
 }
 
-// --- الجزاءات ---
+model Complaint {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  status      String   @default("PENDING") // "PENDING", "RESOLVED"
+  priority    String   @default("MEDIUM")  // "LOW", "MEDIUM", "HIGH"
+  createdAt   DateTime @default(now())
+  
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+}
+
+// --- Legacy/Other Models ---
 model Penalty {
   id          Int      @id @default(autoincrement())
   reason      String
@@ -79,24 +84,18 @@ model Penalty {
   student     Student  @relation(fields: [studentId], references: [id])
 }
 
-// --- الأنشطة ---
-model Activity {
-  id           Int      @id @default(autoincrement())
-  title        String
-  description  String
-  date         DateTime
-  participants ActivityParticipant[]
+model MaintenanceFault {
+  id          Int      @id @default(autoincrement())
+  description String
+  type        String
+  priority    String   @default("MEDIUM") // "LOW", "MEDIUM", "HIGH"
+  status      String   @default("PENDING")
+  location    String?
+  roomId      Int?
+  room        Room?    @relation(fields: [roomId], references: [id])
+  createdAt   DateTime @default(now())
 }
 
-model ActivityParticipant {
-  activityId Int
-  studentId  Int
-  activity   Activity @relation(fields: [activityId], references: [id])
-  student    Student  @relation(fields: [studentId], references: [id])
-  @@id([activityId, studentId])
-}
-
-// --- السجلات ---
 model SystemLog {
   id        Int      @id @default(autoincrement())
   action    String

@@ -14,7 +14,10 @@ import {
     ChevronLeft,
     ChevronRight,
     ShieldCheck,
-    AlertTriangle
+    AlertTriangle,
+    Home,
+    Wrench,
+    Hammer
 } from 'lucide-react';
 import { cn } from '../lib/utils'; // تأكد إن ملف utils.ts موجود
 
@@ -27,6 +30,8 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     { id: 'dashboard', label: 'لوحة التحكم', icon: <LayoutDashboard size={20} />, path: '/' },
+    { id: 'rooms', label: 'إدارة الغرف', icon: <Home size={20} />, path: '/rooms' },
+    { id: 'complaints', label: 'الشكاوى والصيانة', icon: <Hammer size={20} />, path: '/complaints' },
     { id: 'attendance', label: 'التمام والحضور', icon: <ClipboardCheck size={20} />, path: '/attendance' },
     { id: 'students', label: 'الطلاب', icon: <Users size={20} />, path: '/students' },
     { id: 'permits', label: 'التصاريح', icon: <ShieldCheck size={20} />, path: '/permits' },

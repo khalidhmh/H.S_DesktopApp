@@ -1,50 +1,73 @@
-import { useState } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Sidebar } from './layouts/Sidebar';
-import DashboardPage from './features/dashboard/DashboardPage';
-import AttendancePage from './features/attendance/AttendancePage';
-import StudentManagementPage from './features/students/StudentManagementPage';
+import { MainLayout } from './views/layouts/MainLayout';
 import { LoginPage } from './features/auth/LoginPage';
+import { useAuthStore } from './viewmodels/useAuthStore';
+import { ErrorBoundary } from './components/ErrorBoundary';
+
+// Lazy loading could be added here for performance
+import ManagerDashboard from './views/pages/manager/ManagerDashboard';
+import SupervisorDashboard from './views/pages/supervisor/SupervisorDashboard';
+import StudentManagement from './views/pages/manager/StudentManagement';
+import RoomManagement from './views/pages/manager/RoomManagement';
+import AttendancePage from './views/pages/supervisor/AttendancePage';
+import ComplaintsPage from './views/pages/common/ComplaintsPage';
+import PenaltiesPage from './views/pages/manager/PenaltiesPage';
+import ReportsPage from './views/pages/manager/ReportsPage';
+import SettingsPage from './views/pages/common/SettingsPage';
+import { Toaster } from 'sonner';
+// Removed unused StudentManagementPage import
 
 function App() {
-  // حالة تسجيل الدخول (مبدئياً false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<string>('');
+  const { isAuthenticated, currentUser } = useAuthStore();
 
-  const handleLogin = (role: string) => {
-    setIsAuthenticated(true);
-    setUserRole(role);
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUserRole('');
-  };
-
-  // لو مش مسجل دخول، اعرض صفحة الدخول فقط
   if (!isAuthenticated) {
-    return <LoginPage onLoginSuccess={handleLogin} />;
+    return <LoginPage onLoginSuccess={() => { }} />;
   }
 
+  const Dashboard = currentUser?.role === 'SUPERVISOR' ? SupervisorDashboard : ManagerDashboard;
+
+  // Determine home page based on role if needed, or default to dashboard
   return (
     <Router>
-      <div className="flex h-screen bg-[#F5F7FA] overflow-hidden font-sans text-right" dir="rtl">
-        {/* السايد بار */}
-        <Sidebar />
-
-        {/* المحتوى */}
-        <main className="flex-1 overflow-auto relative scroll-smooth">
-          <div className="w-full max-w-7xl mx-auto">
-            <Routes>
-              <Route path="/" element={<DashboardPage userRole={userRole as 'MANAGER' | 'SUPERVISOR'} />} />
-              <Route path="/attendance" element={<AttendancePage userRole={userRole} />} />
-              <Route path="/students" element={<StudentManagementPage />} />
-              {/* باقي الروابط زي ما هي... */}
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
+      <ErrorBoundary fallback={
+        <div className="p-10 text-center">Something went wrong. Please refresh the app.</div>
+      }>
+        <Toaster position="top-center" richColors />
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="students" element={<StudentManagement />} />
+            <Route path="rooms" element={<RoomManagement />} />
+            <Route
+              path="/complaints"
+              element={<ComplaintsPage />}
+            />
+            <Route
+              path="/penalties"
+              element={<PenaltiesPage />}
+            />
+            <Route
+              path="/reports"
+              element={<ReportsPage />}
+            />
+            <Route
+              path="/settings"
+              element={<SettingsPage />}
+            />
+            <Route
+              path="/rooms"
+              element={<RoomManagement />}
+            />
+            <Route
+              path="/attendance"
+              element={<AttendancePage />}
+            />
+            {/* The original StudentManagementPage route is replaced by the new StudentManagement route */}
+            {/* Add other routes here */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </ErrorBoundary>
     </Router>
   );
 }
