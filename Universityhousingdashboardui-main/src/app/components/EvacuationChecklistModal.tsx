@@ -1,47 +1,48 @@
-import { useState } from 'react';
-import { X, CheckSquare, AlertCircle } from 'lucide-react';
+import { useState } from 'react'
+import { X, CheckSquare, AlertCircle } from 'lucide-react'
 
 interface EvacuationChecklistModalProps {
-  studentName: string;
-  onClose: () => void;
+  studentName: string
+  onClose: () => void
 }
 
 interface ChecklistItem {
-  id: string;
-  label: string;
-  checked: boolean;
+  id: string
+  label: string
+  checked: boolean
 }
 
 export function EvacuationChecklistModal({ studentName, onClose }: EvacuationChecklistModalProps) {
   const [checklist, setChecklist] = useState<ChecklistItem[]>([
     { id: 'key', label: 'تم إرجاع المفتاح', checked: false },
     { id: 'id', label: 'تم إرجاع بطاقة الإقامة', checked: false },
-    { id: 'room', label: 'تم فحص الغرفة', checked: false },
-  ]);
+    { id: 'room', label: 'تم فحص الغرفة', checked: false }
+  ])
 
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState('')
 
   const toggleItem = (id: string) => {
     setChecklist((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      )
-    );
-  };
+      prev.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item))
+    )
+  }
 
-  const allChecked = checklist.every((item) => item.checked);
+  const allChecked = checklist.every((item) => item.checked)
 
   const handleSubmit = () => {
     if (allChecked) {
-      alert('تم إتمام عملية الإخلاء بنجاح');
-      onClose();
+      alert('تم إتمام عملية الإخلاء بنجاح')
+      onClose()
     } else {
-      alert('يجب إكمال جميع بنود القائمة قبل الإتمام');
+      alert('يجب إكمال جميع بنود القائمة قبل الإتمام')
     }
-  };
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4"
+      onClick={onClose}
+    >
       <div
         className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden"
         onClick={(e) => e.stopPropagation()}
@@ -111,9 +112,7 @@ export function EvacuationChecklistModal({ studentName, onClose }: EvacuationChe
                 </span>
 
                 {/* Check Icon */}
-                {item.checked && (
-                  <CheckSquare className="text-green-600" size={24} />
-                )}
+                {item.checked && <CheckSquare className="text-green-600" size={24} />}
               </button>
             ))}
           </div>
@@ -147,10 +146,8 @@ export function EvacuationChecklistModal({ studentName, onClose }: EvacuationChe
                 }`}
                 style={{
                   width: `${
-                    (checklist.filter((item) => item.checked).length /
-                      checklist.length) *
-                    100
-                  }%`,
+                    (checklist.filter((item) => item.checked).length / checklist.length) * 100
+                  }%`
                 }}
               />
             </div>
@@ -179,5 +176,5 @@ export function EvacuationChecklistModal({ studentName, onClose }: EvacuationChe
         </div>
       </div>
     </div>
-  );
+  )
 }

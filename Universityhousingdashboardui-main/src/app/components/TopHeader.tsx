@@ -1,20 +1,20 @@
-import { Wifi, RefreshCw, ChevronLeft, UserCog, BarChart3 } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
-import { Button } from '@/app/components/ui/button';
+import { Wifi, RefreshCw, ChevronLeft, UserCog, BarChart3 } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar'
+import { Button } from '@/app/components/ui/button'
 
 interface TopHeaderProps {
-  currentView: 'supervisor' | 'manager';
-  onViewChange: (view: 'supervisor' | 'manager') => void;
-  activeSection: string;
+  currentView: 'supervisor' | 'manager'
+  onViewChange: (view: 'supervisor' | 'manager') => void
+  activeSection: string
 }
 
 export function TopHeader({ currentView, onViewChange, activeSection }: TopHeaderProps) {
-  const ping = 12;
+  const ping = 12
   const wifiStatus: 'excellent' | 'good' | 'poor' =
-    ping < 20 ? 'excellent' : ping < 50 ? 'good' : 'poor';
+    ping < 20 ? 'excellent' : ping < 50 ? 'good' : 'poor'
 
   const wifiColor =
-    wifiStatus === 'excellent' ? '#10B981' : wifiStatus === 'good' ? '#F2C94C' : '#EF4444';
+    wifiStatus === 'excellent' ? '#10B981' : wifiStatus === 'good' ? '#F2C94C' : '#EF4444'
 
   return (
     <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
@@ -27,10 +27,7 @@ export function TopHeader({ currentView, onViewChange, activeSection }: TopHeade
           </span>
         </div>
         <div className="w-px h-6 bg-gray-300" />
-        <Button
-          size="sm"
-          className="bg-[#F2C94C] hover:bg-[#F2C94C]/90 text-[#002147] h-8"
-        >
+        <Button size="sm" className="bg-[#F2C94C] hover:bg-[#F2C94C]/90 text-[#002147] h-8">
           <RefreshCw size={14} className="ml-2" />
           مزامنة الآن
         </Button>
@@ -69,11 +66,17 @@ export function TopHeader({ currentView, onViewChange, activeSection }: TopHeade
           <span className="text-[#002147] font-semibold">لوحة التحكم</span>
           <ChevronLeft size={16} />
           <span>
-            {activeSection === 'dashboard' ? 'الرئيسية' :
-             activeSection === 'attendance' ? 'تحضير الحضور' :
-             activeSection === 'students' ? 'إدارة الطلاب' :
-             activeSection === 'maintenance' ? 'إدارة الصيانة' :
-             activeSection === 'settings' ? 'الإعدادات' : activeSection}
+            {activeSection === 'dashboard'
+              ? 'الرئيسية'
+              : activeSection === 'attendance'
+                ? 'تحضير الحضور'
+                : activeSection === 'students'
+                  ? 'إدارة الطلاب'
+                  : activeSection === 'maintenance'
+                    ? 'إدارة الصيانة'
+                    : activeSection === 'settings'
+                      ? 'الإعدادات'
+                      : activeSection}
           </span>
         </div>
       </div>
@@ -96,5 +99,5 @@ export function TopHeader({ currentView, onViewChange, activeSection }: TopHeade
         </Avatar>
       </div>
     </header>
-  );
+  )
 }

@@ -1,16 +1,28 @@
-import { useState } from 'react';
-import { X, User, Users, Calendar, AlertTriangle, Trophy, Key, CreditCard, CheckSquare, Trash2, RotateCcw } from 'lucide-react';
-import { Student } from '@/app/components/StudentManagementPage';
-import { SecurityChallengeModal } from '@/app/components/SecurityChallengeModal';
-import { EvacuationChecklistModal } from '@/app/components/EvacuationChecklistModal';
-import { IssuePenaltyModal } from '@/app/components/IssuePenaltyModal';
+import { useState } from 'react'
+import {
+  X,
+  User,
+  Users,
+  Calendar,
+  AlertTriangle,
+  Trophy,
+  Key,
+  CreditCard,
+  CheckSquare,
+  Trash2,
+  RotateCcw
+} from 'lucide-react'
+import { Student } from '@/app/components/StudentManagementPage'
+import { SecurityChallengeModal } from '@/app/components/SecurityChallengeModal'
+import { EvacuationChecklistModal } from '@/app/components/EvacuationChecklistModal'
+import { IssuePenaltyModal } from '@/app/components/IssuePenaltyModal'
 
 interface StudentProfileModalProps {
-  student: Student;
-  onClose: () => void;
+  student: Student
+  onClose: () => void
 }
 
-type Tab = 'personal' | 'guardian' | 'attendance' | 'penalties' | 'activities';
+type Tab = 'personal' | 'guardian' | 'attendance' | 'penalties' | 'activities'
 
 // Mock attendance data
 const mockAttendanceData = [
@@ -21,8 +33,8 @@ const mockAttendanceData = [
   { date: '2025-01-25', status: 'present' },
   { date: '2025-01-24', status: 'present' },
   { date: '2025-01-23', status: 'absent' },
-  { date: '2025-01-22', status: 'present' },
-];
+  { date: '2025-01-22', status: 'present' }
+]
 
 // Mock penalties data
 const mockPenalties = [
@@ -32,7 +44,7 @@ const mockPenalties = [
     type: 'تأخير في تسليم المفتاح',
     description: 'عدم تسليم المفتاح في الموعد المحدد',
     issuedBy: 'أحمد محمد - مشرف',
-    status: 'active',
+    status: 'active'
   },
   {
     id: '2',
@@ -40,9 +52,9 @@ const mockPenalties = [
     type: 'إزعاج',
     description: 'صوت عالٍ بعد الساعة 11 مساءً',
     issuedBy: 'خالد علي - مشرف',
-    status: 'resolved',
-  },
-];
+    status: 'resolved'
+  }
+]
 
 // Mock activities data
 const mockActivities = [
@@ -51,53 +63,56 @@ const mockActivities = [
     name: 'بطولة كرة القدم',
     date: '2025-01-15',
     type: 'رياضي',
-    status: 'participated',
+    status: 'participated'
   },
   {
     id: '2',
     name: 'ندوة ثقافية',
     date: '2025-01-10',
     type: 'ثقافي',
-    status: 'participated',
+    status: 'participated'
   },
   {
     id: '3',
     name: 'يوم تطوعي',
     date: '2025-01-05',
     type: 'اجتماعي',
-    status: 'participated',
-  },
-];
+    status: 'participated'
+  }
+]
 
 export function StudentProfileModal({ student, onClose }: StudentProfileModalProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('personal');
-  const [showSecurityModal, setShowSecurityModal] = useState(false);
-  const [showEvacuationModal, setShowEvacuationModal] = useState(false);
-  const [showPenaltyModal, setShowPenaltyModal] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [activeTab, setActiveTab] = useState<Tab>('personal')
+  const [showSecurityModal, setShowSecurityModal] = useState(false)
+  const [showEvacuationModal, setShowEvacuationModal] = useState(false)
+  const [showPenaltyModal, setShowPenaltyModal] = useState(false)
+  const [showToast, setShowToast] = useState(false)
 
   const statusConfig = {
     credit: { label: 'انتظام', color: 'bg-blue-500' },
     regular: { label: 'عادي', color: 'bg-green-500' },
-    expat: { label: 'وافد', color: 'bg-purple-500' },
-  };
+    expat: { label: 'وافد', color: 'bg-purple-500' }
+  }
 
   const tabs = [
     { id: 'personal' as Tab, label: 'المعلومات الشخصية', icon: <User size={18} /> },
     { id: 'guardian' as Tab, label: 'معلومات ولي الأمر', icon: <Users size={18} /> },
     { id: 'attendance' as Tab, label: 'سجل الحضور', icon: <Calendar size={18} /> },
     { id: 'penalties' as Tab, label: 'الجزاءات', icon: <AlertTriangle size={18} /> },
-    { id: 'activities' as Tab, label: 'الأنشطة', icon: <Trophy size={18} /> },
-  ];
+    { id: 'activities' as Tab, label: 'الأنشطة', icon: <Trophy size={18} /> }
+  ]
 
   const handleDelete = () => {
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 4000);
-  };
+    setShowToast(true)
+    setTimeout(() => setShowToast(false), 4000)
+  }
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div
+        className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+        onClick={onClose}
+      >
         <div
           className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
@@ -108,12 +123,18 @@ export function StudentProfileModal({ student, onClose }: StudentProfileModalPro
               {/* Photo and Info */}
               <div className="flex items-start gap-6">
                 <div className="w-32 h-32 rounded-xl overflow-hidden border-4 border-white/20 shadow-lg flex-shrink-0">
-                  <img src={student.photo} alt={student.name} className="w-full h-full object-cover" />
+                  <img
+                    src={student.photo}
+                    alt={student.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{student.name}</h2>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className={`${statusConfig[student.status].color} text-white text-sm px-3 py-1 rounded-full`}>
+                    <span
+                      className={`${statusConfig[student.status].color} text-white text-sm px-3 py-1 rounded-full`}
+                    >
                       {statusConfig[student.status].label}
                     </span>
                     {student.hasPenalties && (
@@ -128,8 +149,12 @@ export function StudentProfileModal({ student, onClose }: StudentProfileModalPro
                     )}
                   </div>
                   <div className="text-sm space-y-1 opacity-90">
-                    <p>{student.college} - المستوى {student.year}</p>
-                    <p>الغرفة: {student.roomNumber} - الطابق {student.floor}</p>
+                    <p>
+                      {student.college} - المستوى {student.year}
+                    </p>
+                    <p>
+                      الغرفة: {student.roomNumber} - الطابق {student.floor}
+                    </p>
                     <p>الرقم القومي: {student.nationalId}</p>
                   </div>
                 </div>
@@ -229,10 +254,7 @@ export function StudentProfileModal({ student, onClose }: StudentProfileModalPro
       )}
 
       {showPenaltyModal && (
-        <IssuePenaltyModal
-          studentName={student.name}
-          onClose={() => setShowPenaltyModal(false)}
-        />
+        <IssuePenaltyModal studentName={student.name} onClose={() => setShowPenaltyModal(false)} />
       )}
 
       {/* Toast Notification */}
@@ -243,7 +265,7 @@ export function StudentProfileModal({ student, onClose }: StudentProfileModalPro
         </div>
       )}
     </>
-  );
+  )
 }
 
 function PersonalInfoTab({ student }: { student: Student }) {
@@ -259,7 +281,12 @@ function PersonalInfoTab({ student }: { student: Student }) {
         <InfoField label="رقم الغرفة" value={student.roomNumber} />
         <InfoField label="الطابق" value={`الطابق ${student.floor}`} />
         <InfoField label="المحافظة" value={student.governorate} />
-        <InfoField label="حالة الطالب" value={student.status === 'credit' ? 'انتظام' : student.status === 'regular' ? 'عادي' : 'وافد'} />
+        <InfoField
+          label="حالة الطالب"
+          value={
+            student.status === 'credit' ? 'انتظام' : student.status === 'regular' ? 'عادي' : 'وافد'
+          }
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-6 pt-6 border-t">
@@ -267,7 +294,7 @@ function PersonalInfoTab({ student }: { student: Student }) {
         <StatCard label="عدد الجزاءات" value={student.penaltyCount} color="red" />
       </div>
     </div>
-  );
+  )
 }
 
 function GuardianInfoTab({ student }: { student: Student }) {
@@ -282,40 +309,41 @@ function GuardianInfoTab({ student }: { student: Student }) {
 
       <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mt-6">
         <p className="text-sm text-blue-800">
-          <span className="font-bold">ملاحظة:</span> يتم التواصل مع ولي الأمر في حالة الطوارئ أو عند الحاجة لإبلاغه بأي مستجدات
+          <span className="font-bold">ملاحظة:</span> يتم التواصل مع ولي الأمر في حالة الطوارئ أو عند
+          الحاجة لإبلاغه بأي مستجدات
         </p>
       </div>
     </div>
-  );
+  )
 }
 
 function AttendanceTab() {
   const getCurrentMonthDays = () => {
-    const days = [];
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days = []
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = today.getMonth()
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day);
-      const dateStr = date.toISOString().split('T')[0];
-      const attendanceRecord = mockAttendanceData.find((a) => a.date === dateStr);
-      
+      const date = new Date(year, month, day)
+      const dateStr = date.toISOString().split('T')[0]
+      const attendanceRecord = mockAttendanceData.find((a) => a.date === dateStr)
+
       days.push({
         day,
         date: dateStr,
         status: attendanceRecord?.status || 'pending',
         isToday: day === today.getDate(),
-        isFuture: day > today.getDate(),
-      });
+        isFuture: day > today.getDate()
+      })
     }
 
-    return days;
-  };
+    return days
+  }
 
-  const days = getCurrentMonthDays();
-  const weekDays = ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س'];
+  const days = getCurrentMonthDays()
+  const weekDays = ['ح', 'ن', 'ث', 'ر', 'خ', 'ج', 'س']
 
   return (
     <div className="space-y-6">
@@ -355,10 +383,10 @@ function AttendanceTab() {
               dayInfo.status === 'present'
                 ? 'bg-green-500 text-white'
                 : dayInfo.status === 'absent'
-                ? 'bg-red-500 text-white'
-                : dayInfo.isFuture
-                ? 'bg-gray-100 text-gray-400'
-                : 'bg-gray-300 text-gray-700';
+                  ? 'bg-red-500 text-white'
+                  : dayInfo.isFuture
+                    ? 'bg-gray-100 text-gray-400'
+                    : 'bg-gray-300 text-gray-700'
 
             return (
               <div
@@ -369,7 +397,7 @@ function AttendanceTab() {
               >
                 {dayInfo.day}
               </div>
-            );
+            )
           })}
         </div>
       </div>
@@ -380,7 +408,7 @@ function AttendanceTab() {
         <StatCard label="نسبة الحضور" value="89%" color="blue" />
       </div>
     </div>
-  );
+  )
 }
 
 function PenaltiesTab() {
@@ -431,7 +459,7 @@ function PenaltiesTab() {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function ActivitiesTab() {
@@ -448,7 +476,10 @@ function ActivitiesTab() {
       ) : (
         <div className="grid grid-cols-1 gap-3">
           {mockActivities.map((activity) => (
-            <div key={activity.id} className="bg-white border-2 border-gray-200 rounded-xl p-4 hover:border-[#F2C94C] transition-colors">
+            <div
+              key={activity.id}
+              className="bg-white border-2 border-gray-200 rounded-xl p-4 hover:border-[#F2C94C] transition-colors"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="bg-[#F2C94C] p-3 rounded-lg">
@@ -477,7 +508,7 @@ function ActivitiesTab() {
         </p>
       </div>
     </div>
-  );
+  )
 }
 
 function InfoField({ label, value }: { label: string; value: string }) {
@@ -486,21 +517,29 @@ function InfoField({ label, value }: { label: string; value: string }) {
       <label className="text-sm font-medium text-gray-500 mb-1 block">{label}</label>
       <p className="text-[#002147] font-medium bg-gray-50 p-3 rounded-lg">{value}</p>
     </div>
-  );
+  )
 }
 
-function StatCard({ label, value, color }: { label: string; value: number | string; color: string }) {
+function StatCard({
+  label,
+  value,
+  color
+}: {
+  label: string
+  value: number | string
+  color: string
+}) {
   const colorClasses = {
     orange: 'bg-orange-50 border-orange-200 text-orange-700',
     red: 'bg-red-50 border-red-200 text-red-700',
     green: 'bg-green-50 border-green-200 text-green-700',
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-  };
+    blue: 'bg-blue-50 border-blue-200 text-blue-700'
+  }
 
   return (
     <div className={`border-2 rounded-xl p-4 ${colorClasses[color as keyof typeof colorClasses]}`}>
       <p className="text-sm font-medium mb-1">{label}</p>
       <p className="text-3xl font-bold">{value}</p>
     </div>
-  );
+  )
 }

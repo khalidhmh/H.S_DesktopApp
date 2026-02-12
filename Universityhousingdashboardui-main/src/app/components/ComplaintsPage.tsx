@@ -1,30 +1,30 @@
-import { useState } from 'react';
-import { 
-  MessageSquare, 
-  Lock, 
-  Search, 
-  Paperclip, 
-  Send, 
-  CheckCircle, 
-  Clock, 
+import { useState } from 'react'
+import {
+  MessageSquare,
+  Lock,
+  Search,
+  Paperclip,
+  Send,
+  CheckCircle,
+  Clock,
   User,
   MoreVertical,
   ChevronLeft
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
+import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback'
 
 interface Complaint {
-  id: string;
-  studentName: string;
-  roomNo: string;
-  topic: string;
-  summary: string;
-  timeReceived: string;
-  status: 'new' | 'read' | 'replied';
-  isAnonymous: boolean;
-  message: string;
-  attachments?: string[];
+  id: string
+  studentName: string
+  roomNo: string
+  topic: string
+  summary: string
+  timeReceived: string
+  status: 'new' | 'read' | 'replied'
+  isAnonymous: boolean
+  message: string
+  attachments?: string[]
 }
 
 const mockComplaints: Complaint[] = [
@@ -37,8 +37,11 @@ const mockComplaints: Complaint[] = [
     timeReceived: '10:30 ص',
     status: 'new',
     isAnonymous: false,
-    message: 'السلام عليكم، أود الإبلاغ عن عطل في جهاز التكييف الخاص بغرفتي رقم A-204. الجهاز يصدر ضوضاء مزعجة جداً ولا يقوم بالتبريد الكافي، مما يجعل الدراسة في الغرفة صعبة جداً خصوصاً في فترة الظهيرة. أرجو ��رسال فني في أقرب وقت ممكن.',
-    attachments: ['https://images.unsplash.com/photo-1590483734724-38fa19744980?w=300&h=200&fit=crop']
+    message:
+      'السلام عليكم، أود الإبلاغ عن عطل في جهاز التكييف الخاص بغرفتي رقم A-204. الجهاز يصدر ضوضاء مزعجة جداً ولا يقوم بالتبريد الكافي، مما يجعل الدراسة في الغرفة صعبة جداً خصوصاً في فترة الظهيرة. أرجو ��رسال فني في أقرب وقت ممكن.',
+    attachments: [
+      'https://images.unsplash.com/photo-1590483734724-38fa19744980?w=300&h=200&fit=crop'
+    ]
   },
   {
     id: '2',
@@ -49,7 +52,8 @@ const mockComplaints: Complaint[] = [
     timeReceived: '09:15 ص',
     status: 'read',
     isAnonymous: true,
-    message: 'هناك إهمال واضح في نظافة الطابق الثالث، القمامة متراكمة منذ الصباح الباكر ولم يتم إزالتها حتى الآن. الرائحة بدأت تصبح مزعجة جداً وتؤثر على المظهر العام والمستوى الصحي للسكن.',
+    message:
+      'هناك إهمال واضح في نظافة الطابق الثالث، القمامة متراكمة منذ الصباح الباكر ولم يتم إزالتها حتى الآن. الرائحة بدأت تصبح مزعجة جداً وتؤثر على المظهر العام والمستوى الصحي للسكن.'
   },
   {
     id: '3',
@@ -60,7 +64,8 @@ const mockComplaints: Complaint[] = [
     timeReceived: 'أمس',
     status: 'replied',
     isAnonymous: false,
-    message: 'نحن طالبات الطابق الأول نطلب تمديد ساعات العمل في المكتبة المركزية لتصبح حتى الساعة 12 منتصف الليل بدلاً من 10 مساءً، وذلك نظر��ً لاقتراب موعد الامتحانات النهائية وحاجتنا لمكان هادئ للمذاكرة.',
+    message:
+      'نحن طالبات الطابق الأول نطلب تمديد ساعات العمل في المكتبة المركزية لتصبح حتى الساعة 12 منتصف الليل بدلاً من 10 مساءً، وذلك نظر��ً لاقتراب موعد الامتحانات النهائية وحاجتنا لمكان هادئ للمذاكرة.'
   },
   {
     id: '4',
@@ -71,7 +76,8 @@ const mockComplaints: Complaint[] = [
     timeReceived: 'منذ يومين',
     status: 'new',
     isAnonymous: false,
-    message: 'أرجو الانتباه، مفتاح الإضاءة الرئيسي في الغرفة C-302 متعطل، وعند الضغط عليه يصدر شرارة كهربائية بسيطة، نخشى من حدوث تماس كهربائي. يرجى الإصلاح العاجل.',
+    message:
+      'أرجو الانتباه، مفتاح الإضاءة الرئيسي في الغرفة C-302 متعطل، وعند الضغط عليه يصدر شرارة كهربائية بسيطة، نخشى من حدوث تماس كهربائي. يرجى الإصلاح العاجل.'
   },
   {
     id: '5',
@@ -82,30 +88,47 @@ const mockComplaints: Complaint[] = [
     timeReceived: 'منذ 3 أيام',
     status: 'read',
     isAnonymous: true,
-    message: 'الوجبة المقدمة اليوم (الأرز والدجاج) كانت باردة جداً، والدجاج لم يكن ناضجاً بشكل كامل. نرجو الاهتمام بجودة الطعام المقدم في المطعم الجامعي.',
+    message:
+      'الوجبة المقدمة اليوم (الأرز والدجاج) كانت باردة جداً، والدجاج لم يكن ناضجاً بشكل كامل. نرجو الاهتمام بجودة الطعام المقدم في المطعم الجامعي.'
   }
-];
+]
 
 export function ComplaintsPage() {
-  const [selectedId, setSelectedId] = useState<string>(mockComplaints[0].id);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [replyText, setReplyText] = useState('');
+  const [selectedId, setSelectedId] = useState<string>(mockComplaints[0].id)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [replyText, setReplyText] = useState('')
 
-  const selectedComplaint = mockComplaints.find(c => c.id === selectedId) || mockComplaints[0];
+  const selectedComplaint = mockComplaints.find((c) => c.id === selectedId) || mockComplaints[0]
 
-  const filteredComplaints = mockComplaints.filter(c => 
-    c.topic.includes(searchQuery) || 
-    c.studentName.includes(searchQuery) ||
-    c.roomNo.includes(searchQuery)
-  );
+  const filteredComplaints = mockComplaints.filter(
+    (c) =>
+      c.topic.includes(searchQuery) ||
+      c.studentName.includes(searchQuery) ||
+      c.roomNo.includes(searchQuery)
+  )
 
   const getStatusBadge = (status: Complaint['status']) => {
     switch (status) {
-      case 'new': return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600">جديد</span>;
-      case 'read': return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-600">تم الاطلاع</span>;
-      case 'replied': return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-600">تم الرد</span>;
+      case 'new':
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600">
+            جديد
+          </span>
+        )
+      case 'read':
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-600">
+            تم الاطلاع
+          </span>
+        )
+      case 'replied':
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-600">
+            تم الرد
+          </span>
+        )
     }
-  };
+  }
 
   return (
     <div className="h-full flex bg-[#F5F7FA]">
@@ -114,8 +137,8 @@ export function ComplaintsPage() {
         <div className="p-4 border-b border-gray-100">
           <h2 className="text-lg font-bold text-[#002147] mb-4">قائمة الشكاوى</h2>
           <div className="relative">
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="بحث في الشكاوى..."
               className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 text-sm pr-10 focus:ring-2 focus:ring-[#F2C94C] outline-none"
               value={searchQuery}
@@ -131,7 +154,9 @@ export function ComplaintsPage() {
               key={complaint.id}
               onClick={() => setSelectedId(complaint.id)}
               className={`w-full text-right p-4 border-b border-gray-50 transition-all ${
-                selectedId === complaint.id ? 'bg-[#F2C94C]/10 border-r-4 border-r-[#F2C94C]' : 'hover:bg-gray-50'
+                selectedId === complaint.id
+                  ? 'bg-[#F2C94C]/10 border-r-4 border-r-[#F2C94C]'
+                  : 'hover:bg-gray-50'
               } ${complaint.isAnonymous ? 'bg-purple-50/50' : ''}`}
             >
               <div className="flex justify-between items-start mb-1">
@@ -141,13 +166,17 @@ export function ComplaintsPage() {
                   </span>
                   {complaint.isAnonymous && <Lock size={12} className="text-purple-500" />}
                 </div>
-                <span className="text-[10px] text-gray-400 font-medium">{complaint.timeReceived}</span>
+                <span className="text-[10px] text-gray-400 font-medium">
+                  {complaint.timeReceived}
+                </span>
               </div>
-              
+
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs text-gray-500 font-medium">{complaint.roomNo}</span>
                 <span className="text-gray-300">•</span>
-                <p className="text-xs font-bold text-[#002147] truncate flex-1">{complaint.topic}</p>
+                <p className="text-xs font-bold text-[#002147] truncate flex-1">
+                  {complaint.topic}
+                </p>
               </div>
 
               <div className="flex justify-between items-center">
@@ -162,7 +191,7 @@ export function ComplaintsPage() {
       {/* Left Panel: Details */}
       <div className="flex-1 flex flex-col overflow-hidden bg-white">
         <AnimatePresence mode="wait">
-          <motion.div 
+          <motion.div
             key={selectedComplaint.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -171,12 +200,16 @@ export function ComplaintsPage() {
             {/* Detail Header */}
             <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white shadow-sm z-10">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${selectedComplaint.isAnonymous ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center ${selectedComplaint.isAnonymous ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}
+                >
                   {selectedComplaint.isAnonymous ? <Lock size={24} /> : <User size={24} />}
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-[#002147]">
-                    {selectedComplaint.isAnonymous ? 'صاحب الشكوى مجهول' : selectedComplaint.studentName}
+                    {selectedComplaint.isAnonymous
+                      ? 'صاحب الشكوى مجهول'
+                      : selectedComplaint.studentName}
                   </h3>
                   <div className="flex items-center gap-3 text-sm text-gray-500">
                     <span className="font-medium">الموضوع: {selectedComplaint.topic}</span>
@@ -210,13 +243,15 @@ export function ComplaintsPage() {
 
                 {selectedComplaint.attachments && selectedComplaint.attachments.length > 0 && (
                   <div className="space-y-3">
-                    <p className="text-sm font-bold text-gray-500">المرفقات ({selectedComplaint.attachments.length})</p>
+                    <p className="text-sm font-bold text-gray-500">
+                      المرفقات ({selectedComplaint.attachments.length})
+                    </p>
                     <div className="flex gap-3">
                       {selectedComplaint.attachments.map((url, idx) => (
                         <div key={idx} className="relative group cursor-pointer">
-                          <ImageWithFallback 
-                            src={url} 
-                            className="w-48 h-32 rounded-2xl object-cover border border-gray-200" 
+                          <ImageWithFallback
+                            src={url}
+                            className="w-48 h-32 rounded-2xl object-cover border border-gray-200"
                             alt="Attachment"
                           />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
@@ -247,9 +282,9 @@ export function ComplaintsPage() {
                     إرفاق ملف
                   </button>
                 </div>
-                
+
                 <div className="relative">
-                  <textarea 
+                  <textarea
                     placeholder="اكتب ردك هنا..."
                     className="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-[#F2C94C] outline-none min-h-[100px] resize-none pr-4"
                     value={replyText}
@@ -266,5 +301,5 @@ export function ComplaintsPage() {
         </AnimatePresence>
       </div>
     </div>
-  );
+  )
 }

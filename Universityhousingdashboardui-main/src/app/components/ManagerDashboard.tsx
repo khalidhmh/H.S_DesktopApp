@@ -1,21 +1,40 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { CheckCircle, XCircle, TrendingUp, TrendingDown, AlertTriangle, CheckCheck } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card'
+import { Button } from '@/app/components/ui/button'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from 'recharts'
+import {
+  CheckCircle,
+  XCircle,
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  CheckCheck
+} from 'lucide-react'
 
 // Occupancy Rate Data
 const occupancyData = [
   { name: 'مشغول', value: 812, color: '#10B981' },
-  { name: 'شاغر', value: 44, color: '#E5E7EB' },
-];
+  { name: 'شاغر', value: 44, color: '#E5E7EB' }
+]
 
 // Maintenance Resolution Time Data
 const maintenanceData = [
   { month: 'أكتوبر', hours: 48 },
   { month: 'نوفمبر', hours: 36 },
   { month: 'ديسمبر', hours: 28 },
-  { month: 'يناير', hours: 24 },
-];
+  { month: 'يناير', hours: 24 }
+]
 
 // Absence Trends Data
 const absenceData = [
@@ -25,17 +44,17 @@ const absenceData = [
   { day: 'الثلاثاء', absent: 10 },
   { day: 'الأربعاء', absent: 7 },
   { day: 'الخميس', absent: 9 },
-  { day: 'الجمعة', absent: 5 },
-];
+  { day: 'الجمعة', absent: 5 }
+]
 
 interface PendingApproval {
-  id: string;
-  studentName: string;
-  studentId: string;
-  requestedBy: string;
-  reason: string;
-  date: string;
-  priority: 'high' | 'medium' | 'low';
+  id: string
+  studentName: string
+  studentId: string
+  requestedBy: string
+  reason: string
+  date: string
+  priority: 'high' | 'medium' | 'low'
 }
 
 const pendingApprovals: PendingApproval[] = [
@@ -46,7 +65,7 @@ const pendingApprovals: PendingApproval[] = [
     requestedBy: 'المشرف: خالد أحمد',
     reason: 'انسحاب من الجامعة',
     date: '2026-01-30',
-    priority: 'high',
+    priority: 'high'
   },
   {
     id: '2',
@@ -55,7 +74,7 @@ const pendingApprovals: PendingApproval[] = [
     requestedBy: 'المشرف: فهد سعيد',
     reason: 'نقل إلى سكن خارجي',
     date: '2026-01-29',
-    priority: 'medium',
+    priority: 'medium'
   },
   {
     id: '3',
@@ -64,16 +83,16 @@ const pendingApprovals: PendingApproval[] = [
     requestedBy: 'المشرف: خالد أحمد',
     reason: 'تخرج من الجامعة',
     date: '2026-01-28',
-    priority: 'low',
-  },
-];
+    priority: 'low'
+  }
+]
 
 interface FloorStatus {
-  floor: number;
-  status: 'ok' | 'warning' | 'critical';
-  faults: number;
-  occupancy: number;
-  total: number;
+  floor: number
+  status: 'ok' | 'warning' | 'critical'
+  faults: number
+  occupancy: number
+  total: number
 }
 
 const buildingStatus: FloorStatus[] = [
@@ -81,28 +100,28 @@ const buildingStatus: FloorStatus[] = [
   { floor: 2, status: 'critical', faults: 8, occupancy: 88, total: 100 },
   { floor: 3, status: 'ok', faults: 1, occupancy: 92, total: 100 },
   { floor: 4, status: 'warning', faults: 3, occupancy: 90, total: 100 },
-  { floor: 5, status: 'ok', faults: 0, occupancy: 94, total: 100 },
-];
+  { floor: 5, status: 'ok', faults: 0, occupancy: 94, total: 100 }
+]
 
 export function ManagerDashboard() {
   const handleApprove = (id: string, studentName: string) => {
-    alert(`تمت الموافقة على طلب حذف الطالب: ${studentName}`);
-  };
+    alert(`تمت الموافقة على طلب حذف الطالب: ${studentName}`)
+  }
 
   const handleReject = (id: string, studentName: string) => {
-    alert(`تم رفض طلب حذف الطالب: ${studentName}`);
-  };
+    alert(`تم رفض طلب حذف الطالب: ${studentName}`)
+  }
 
   const getStatusColor = (status: FloorStatus['status']) => {
     switch (status) {
       case 'ok':
-        return { bg: '#ECFDF5', text: '#10B981', border: '#10B981' };
+        return { bg: '#ECFDF5', text: '#10B981', border: '#10B981' }
       case 'warning':
-        return { bg: '#FFFBEB', text: '#F59E0B', border: '#F59E0B' };
+        return { bg: '#FFFBEB', text: '#F59E0B', border: '#F59E0B' }
       case 'critical':
-        return { bg: '#FEF2F2', text: '#EF4444', border: '#EF4444' };
+        return { bg: '#FEF2F2', text: '#EF4444', border: '#EF4444' }
     }
-  };
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -213,19 +232,19 @@ export function ManagerDashboard() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
                 <XAxis dataKey="month" stroke="#6B7280" style={{ fontSize: '12px' }} />
                 <YAxis stroke="#6B7280" style={{ fontSize: '12px' }} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#fff', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#fff',
                     border: '1px solid #E5E7EB',
                     borderRadius: '8px',
                     textAlign: 'right'
                   }}
                 />
                 <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="hours" 
-                  stroke="#F2C94C" 
+                <Line
+                  type="monotone"
+                  dataKey="hours"
+                  stroke="#F2C94C"
                   strokeWidth={3}
                   name="الساعات"
                   dot={{ fill: '#F2C94C', r: 5 }}
@@ -249,19 +268,19 @@ export function ManagerDashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis dataKey="day" stroke="#6B7280" style={{ fontSize: '12px' }} />
               <YAxis stroke="#6B7280" style={{ fontSize: '12px' }} />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#fff', 
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#fff',
                   border: '1px solid #E5E7EB',
                   borderRadius: '8px',
                   textAlign: 'right'
                 }}
               />
               <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="absent" 
-                stroke="#EF4444" 
+              <Line
+                type="monotone"
+                dataKey="absent"
+                stroke="#EF4444"
                 strokeWidth={3}
                 name="الغائبون"
                 dot={{ fill: '#EF4444', r: 5 }}
@@ -297,11 +316,15 @@ export function ManagerDashboard() {
                         approval.priority === 'high'
                           ? 'bg-red-100 text-red-700'
                           : approval.priority === 'medium'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-blue-100 text-blue-700'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-blue-100 text-blue-700'
                       }`}
                     >
-                      {approval.priority === 'high' ? 'عاجل' : approval.priority === 'medium' ? 'متوسط' : 'عادي'}
+                      {approval.priority === 'high'
+                        ? 'عاجل'
+                        : approval.priority === 'medium'
+                          ? 'متوسط'
+                          : 'عادي'}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600 mb-1">السبب: {approval.reason}</p>
@@ -341,14 +364,14 @@ export function ManagerDashboard() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {buildingStatus.map((floor) => {
-              const colors = getStatusColor(floor.status);
+              const colors = getStatusColor(floor.status)
               return (
                 <div
                   key={floor.floor}
                   className="p-5 rounded-xl border-2 transition-all hover:shadow-md"
-                  style={{ 
-                    backgroundColor: colors.bg, 
-                    borderColor: colors.border 
+                  style={{
+                    backgroundColor: colors.bg,
+                    borderColor: colors.border
                   }}
                 >
                   <div className="text-center">
@@ -356,9 +379,19 @@ export function ManagerDashboard() {
                       الطابق {floor.floor}
                     </p>
                     <div className="mb-3">
-                      {floor.status === 'ok' && <CheckCheck size={32} style={{ color: colors.text }} className="mx-auto" />}
-                      {floor.status === 'warning' && <AlertTriangle size={32} style={{ color: colors.text }} className="mx-auto" />}
-                      {floor.status === 'critical' && <XCircle size={32} style={{ color: colors.text }} className="mx-auto" />}
+                      {floor.status === 'ok' && (
+                        <CheckCheck size={32} style={{ color: colors.text }} className="mx-auto" />
+                      )}
+                      {floor.status === 'warning' && (
+                        <AlertTriangle
+                          size={32}
+                          style={{ color: colors.text }}
+                          className="mx-auto"
+                        />
+                      )}
+                      {floor.status === 'critical' && (
+                        <XCircle size={32} style={{ color: colors.text }} className="mx-auto" />
+                      )}
                     </div>
                     <p className="text-xs mb-2" style={{ color: colors.text }}>
                       {floor.status === 'ok' && 'حالة ممتازة'}
@@ -375,11 +408,11 @@ export function ManagerDashboard() {
                     </div>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,13 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Users, Building, Wrench, MessageSquareWarning, TrendingUp, TrendingDown } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card'
+import {
+  Users,
+  Building,
+  Wrench,
+  MessageSquareWarning,
+  TrendingUp,
+  TrendingDown
+} from 'lucide-react'
 
 interface StatCardProps {
-  title: string;
-  value: string;
-  icon: React.ReactNode;
-  trend?: 'up' | 'down';
-  trendValue?: string;
-  color: string;
+  title: string
+  value: string
+  icon: React.ReactNode
+  trend?: 'up' | 'down'
+  trendValue?: string
+  color: string
 }
 
 function StatCard({ title, value, icon, trend, trendValue, color }: StatCardProps) {
@@ -40,14 +47,14 @@ function StatCard({ title, value, icon, trend, trendValue, color }: StatCardProp
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 interface ActivityItem {
-  id: string;
-  title: string;
-  time: string;
-  type: 'info' | 'warning' | 'success';
+  id: string
+  title: string
+  time: string
+  type: 'info' | 'warning' | 'success'
 }
 
 const recentActivities: ActivityItem[] = [
@@ -55,8 +62,8 @@ const recentActivities: ActivityItem[] = [
   { id: '2', title: 'طلب صيانة جديد - غرفة 204', time: 'منذ 15 دقيقة', type: 'warning' },
   { id: '3', title: 'تم الانتهاء من صيانة التكييف', time: 'منذ ساعة', type: 'success' },
   { id: '4', title: 'شكوى جديدة من الطابق الثاني', time: 'منذ ساعتين', type: 'warning' },
-  { id: '5', title: 'تحديث بيانات الطالب - خالد أحمد', time: 'منذ 3 ساعات', type: 'info' },
-];
+  { id: '5', title: 'تحديث بيانات الطالب - خالد أحمد', time: 'منذ 3 ساعات', type: 'info' }
+]
 
 export function DashboardContent() {
   return (
@@ -116,8 +123,8 @@ export function DashboardContent() {
                       activity.type === 'success'
                         ? 'bg-green-500'
                         : activity.type === 'warning'
-                        ? 'bg-yellow-500'
-                        : 'bg-blue-500'
+                          ? 'bg-yellow-500'
+                          : 'bg-blue-500'
                     }`}
                   />
                   <div className="flex-1 min-w-0">
@@ -186,7 +193,7 @@ export function DashboardContent() {
               {[
                 { room: 'غرفة 305', task: 'صيانة دورية للتكييف', date: '2026-02-02' },
                 { room: 'غرفة 412', task: 'فحص الكهرباء', date: '2026-02-03' },
-                { room: 'قاعة الطعام', task: 'صيانة المعدات', date: '2026-02-05' },
+                { room: 'قاعة الطعام', task: 'صيانة المعدات', date: '2026-02-05' }
               ].map((item, index) => (
                 <div
                   key={index}
@@ -212,19 +219,16 @@ export function DashboardContent() {
               {[
                 { message: 'تذكير: اجتماع فريق الإسكان غداً الساعة 10 صباحاً', priority: 'high' },
                 { message: 'تم رفع التقرير الشهري بنجاح', priority: 'low' },
-                { message: 'يوجد 3 طلبات صيانة تحتاج موافقة', priority: 'medium' },
+                { message: 'يوجد 3 طلبات صيانة تحتاج موافقة', priority: 'medium' }
               ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
-                >
+                <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                   <div
                     className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                       item.priority === 'high'
                         ? 'bg-red-500'
                         : item.priority === 'medium'
-                        ? 'bg-yellow-500'
-                        : 'bg-blue-500'
+                          ? 'bg-yellow-500'
+                          : 'bg-blue-500'
                     }`}
                   />
                   <p className="text-sm text-gray-700">{item.message}</p>
@@ -235,5 +239,5 @@ export function DashboardContent() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

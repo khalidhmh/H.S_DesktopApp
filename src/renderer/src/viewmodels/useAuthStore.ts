@@ -1,18 +1,18 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
 interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: 'MANAGER' | 'SUPERVISOR';
+  id: number
+  name: string
+  email: string
+  role: 'MANAGER' | 'SUPERVISOR'
 }
 
 interface AuthState {
-  currentUser: User | null;
-  isAuthenticated: boolean;
-  
-  login: (user: User) => void;
-  logout: () => void;
+  currentUser: User | null
+  isAuthenticated: boolean
+
+  login: (user: User) => void
+  logout: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -20,10 +20,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
 
   login: (user) => {
-    set({ currentUser: user, isAuthenticated: true });
+    set({ currentUser: user, isAuthenticated: true })
   },
 
   logout: () => {
-    set({ currentUser: null, isAuthenticated: false });
-  },
-}));
+    set({ currentUser: null, isAuthenticated: false })
+  }
+}))

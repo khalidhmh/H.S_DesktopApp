@@ -1,34 +1,42 @@
-import { useState } from 'react';
-import { Search, Download, ChevronDown, ChevronUp, X } from 'lucide-react';
-import { StudentProfileModal } from '@/app/components/StudentProfileModal';
+import { useState } from 'react'
+import { Search, Download, ChevronDown, ChevronUp, X } from 'lucide-react'
+import { StudentProfileModal } from '@/app/components/StudentProfileModal'
 
-export type StudentStatus = 'credit' | 'regular' | 'expat';
+export type StudentStatus = 'credit' | 'regular' | 'expat'
 
 export interface Student {
-  id: string;
-  name: string;
-  photo: string;
-  college: string;
-  year: number;
-  roomNumber: string;
-  floor: number;
-  governorate: string;
-  status: StudentStatus;
-  nationalId: string;
-  phone: string;
-  email: string;
-  hasPenalties: boolean;
-  exceededAbsence: boolean;
-  guardianName: string;
-  guardianPhone: string;
-  guardianRelation: string;
-  absenceCount: number;
-  penaltyCount: number;
+  id: string
+  name: string
+  photo: string
+  college: string
+  year: number
+  roomNumber: string
+  floor: number
+  governorate: string
+  status: StudentStatus
+  nationalId: string
+  phone: string
+  email: string
+  hasPenalties: boolean
+  exceededAbsence: boolean
+  guardianName: string
+  guardianPhone: string
+  guardianRelation: string
+  absenceCount: number
+  penaltyCount: number
 }
 
 // Mock data
-const colleges = ['الهندسة', 'الطب', 'العلوم', 'الآداب', 'التجارة', 'الحقوق', 'الصيدلة'];
-const governorates = ['القاهرة', 'الجيزة', 'الإسكندرية', 'الدقهلية', 'الشرقية', 'المنوفية', 'القليوبية'];
+const colleges = ['الهندسة', 'الطب', 'العلوم', 'الآداب', 'التجارة', 'الحقوق', 'الصيدلة']
+const governorates = [
+  'القاهرة',
+  'الجيزة',
+  'الإسكندرية',
+  'الدقهلية',
+  'الشرقية',
+  'المنوفية',
+  'القليوبية'
+]
 
 const mockStudents: Student[] = [
   {
@@ -50,7 +58,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01098765432',
     guardianRelation: 'والد',
     absenceCount: 2,
-    penaltyCount: 0,
+    penaltyCount: 0
   },
   {
     id: '2',
@@ -71,7 +79,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01187654321',
     guardianRelation: 'والد',
     absenceCount: 5,
-    penaltyCount: 2,
+    penaltyCount: 2
   },
   {
     id: '3',
@@ -92,7 +100,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01276543210',
     guardianRelation: 'والد',
     absenceCount: 12,
-    penaltyCount: 0,
+    penaltyCount: 0
   },
   {
     id: '4',
@@ -113,7 +121,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01165432109',
     guardianRelation: 'والد',
     absenceCount: 15,
-    penaltyCount: 3,
+    penaltyCount: 3
   },
   {
     id: '5',
@@ -134,7 +142,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01254321098',
     guardianRelation: 'والد',
     absenceCount: 1,
-    penaltyCount: 0,
+    penaltyCount: 0
   },
   {
     id: '6',
@@ -155,7 +163,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01343210987',
     guardianRelation: 'والد',
     absenceCount: 3,
-    penaltyCount: 0,
+    penaltyCount: 0
   },
   {
     id: '7',
@@ -176,7 +184,7 @@ const mockStudents: Student[] = [
     guardianPhone: '01432109876',
     guardianRelation: 'والد',
     absenceCount: 7,
-    penaltyCount: 1,
+    penaltyCount: 1
   },
   {
     id: '8',
@@ -197,76 +205,85 @@ const mockStudents: Student[] = [
     guardianPhone: '01521098765',
     guardianRelation: 'والد',
     absenceCount: 0,
-    penaltyCount: 0,
-  },
-];
+    penaltyCount: 0
+  }
+]
 
 export function StudentManagementPage() {
-  const [students] = useState<Student[]>(mockStudents);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [showFilters, setShowFilters] = useState(true);
-  
+  const [students] = useState<Student[]>(mockStudents)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
+  const [showFilters, setShowFilters] = useState(true)
+
   // Filter states
-  const [selectedFloors, setSelectedFloors] = useState<number[]>([]);
-  const [selectedColleges, setSelectedColleges] = useState<string[]>([]);
-  const [selectedGovernorates, setSelectedGovernorates] = useState<string[]>([]);
-  const [filterHasPenalties, setFilterHasPenalties] = useState(false);
-  const [filterExceededAbsence, setFilterExceededAbsence] = useState(false);
+  const [selectedFloors, setSelectedFloors] = useState<number[]>([])
+  const [selectedColleges, setSelectedColleges] = useState<string[]>([])
+  const [selectedGovernorates, setSelectedGovernorates] = useState<string[]>([])
+  const [filterHasPenalties, setFilterHasPenalties] = useState(false)
+  const [filterExceededAbsence, setFilterExceededAbsence] = useState(false)
 
   // Filter logic
   const filteredStudents = students.filter((student) => {
-    const matchesSearch = 
+    const matchesSearch =
       student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       student.roomNumber.includes(searchQuery) ||
-      student.nationalId.includes(searchQuery);
-    
-    const matchesFloor = selectedFloors.length === 0 || selectedFloors.includes(student.floor);
-    const matchesCollege = selectedColleges.length === 0 || selectedColleges.includes(student.college);
-    const matchesGovernorate = selectedGovernorates.length === 0 || selectedGovernorates.includes(student.governorate);
-    const matchesPenalties = !filterHasPenalties || student.hasPenalties;
-    const matchesAbsence = !filterExceededAbsence || student.exceededAbsence;
+      student.nationalId.includes(searchQuery)
 
-    return matchesSearch && matchesFloor && matchesCollege && matchesGovernorate && matchesPenalties && matchesAbsence;
-  });
+    const matchesFloor = selectedFloors.length === 0 || selectedFloors.includes(student.floor)
+    const matchesCollege =
+      selectedColleges.length === 0 || selectedColleges.includes(student.college)
+    const matchesGovernorate =
+      selectedGovernorates.length === 0 || selectedGovernorates.includes(student.governorate)
+    const matchesPenalties = !filterHasPenalties || student.hasPenalties
+    const matchesAbsence = !filterExceededAbsence || student.exceededAbsence
+
+    return (
+      matchesSearch &&
+      matchesFloor &&
+      matchesCollege &&
+      matchesGovernorate &&
+      matchesPenalties &&
+      matchesAbsence
+    )
+  })
 
   const toggleFloor = (floor: number) => {
     setSelectedFloors((prev) =>
       prev.includes(floor) ? prev.filter((f) => f !== floor) : [...prev, floor]
-    );
-  };
+    )
+  }
 
   const toggleCollege = (college: string) => {
     setSelectedColleges((prev) =>
       prev.includes(college) ? prev.filter((c) => c !== college) : [...prev, college]
-    );
-  };
+    )
+  }
 
   const toggleGovernorate = (gov: string) => {
     setSelectedGovernorates((prev) =>
       prev.includes(gov) ? prev.filter((g) => g !== gov) : [...prev, gov]
-    );
-  };
+    )
+  }
 
   const clearFilters = () => {
-    setSelectedFloors([]);
-    setSelectedColleges([]);
-    setSelectedGovernorates([]);
-    setFilterHasPenalties(false);
-    setFilterExceededAbsence(false);
-  };
+    setSelectedFloors([])
+    setSelectedColleges([])
+    setSelectedGovernorates([])
+    setFilterHasPenalties(false)
+    setFilterExceededAbsence(false)
+  }
 
-  const activeFilterCount = 
-    selectedFloors.length + 
-    selectedColleges.length + 
-    selectedGovernorates.length + 
-    (filterHasPenalties ? 1 : 0) + 
-    (filterExceededAbsence ? 1 : 0);
+  const activeFilterCount =
+    selectedFloors.length +
+    selectedColleges.length +
+    selectedGovernorates.length +
+    (filterHasPenalties ? 1 : 0) +
+    (filterExceededAbsence ? 1 : 0)
 
   const handleExportExcel = () => {
     // Mock export functionality
-    alert('جاري تصدير البيانات إلى Excel...');
-  };
+    alert('جاري تصدير البيانات إلى Excel...')
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -275,12 +292,8 @@ export function StudentManagementPage() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           {/* Title */}
           <div>
-            <h1 className="text-2xl font-bold text-[#002147] mb-1">
-              إدارة الطلاب
-            </h1>
-            <p className="text-gray-600 text-sm">
-              عرض وإدارة بيانات الطلاب المقيمين
-            </p>
+            <h1 className="text-2xl font-bold text-[#002147] mb-1">إدارة الطلاب</h1>
+            <p className="text-gray-600 text-sm">عرض وإدارة بيانات الطلاب المقيمين</p>
           </div>
 
           {/* Export Button */}
@@ -349,7 +362,10 @@ export function StudentManagementPage() {
                 <h4 className="text-sm font-bold text-gray-700 mb-2">الطابق</h4>
                 <div className="space-y-2">
                   {[1, 2, 3, 4, 5, 6].map((floor) => (
-                    <label key={floor} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <label
+                      key={floor}
+                      className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                    >
                       <input
                         type="checkbox"
                         checked={selectedFloors.includes(floor)}
@@ -367,7 +383,10 @@ export function StudentManagementPage() {
                 <h4 className="text-sm font-bold text-gray-700 mb-2">الكلية</h4>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {colleges.map((college) => (
-                    <label key={college} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <label
+                      key={college}
+                      className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                    >
                       <input
                         type="checkbox"
                         checked={selectedColleges.includes(college)}
@@ -385,7 +404,10 @@ export function StudentManagementPage() {
                 <h4 className="text-sm font-bold text-gray-700 mb-2">المحافظة</h4>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {governorates.map((gov) => (
-                    <label key={gov} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    <label
+                      key={gov}
+                      className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                    >
                       <input
                         type="checkbox"
                         checked={selectedGovernorates.includes(gov)}
@@ -445,26 +467,23 @@ export function StudentManagementPage() {
 
       {/* Student Profile Modal */}
       {selectedStudent && (
-        <StudentProfileModal
-          student={selectedStudent}
-          onClose={() => setSelectedStudent(null)}
-        />
+        <StudentProfileModal student={selectedStudent} onClose={() => setSelectedStudent(null)} />
       )}
     </div>
-  );
+  )
 }
 
 interface StudentCardProps {
-  student: Student;
-  onClick: () => void;
+  student: Student
+  onClick: () => void
 }
 
 function StudentCard({ student, onClick }: StudentCardProps) {
   const statusConfig = {
     credit: { label: 'انتظام', color: 'bg-blue-100 text-blue-700 border-blue-200' },
     regular: { label: 'عادي', color: 'bg-green-100 text-green-700 border-green-200' },
-    expat: { label: 'وافد', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-  };
+    expat: { label: 'وافد', color: 'bg-purple-100 text-purple-700 border-purple-200' }
+  }
 
   return (
     <button
@@ -485,7 +504,9 @@ function StudentCard({ student, onClick }: StudentCardProps) {
         {/* Name and Status */}
         <div>
           <h3 className="font-bold text-[#002147] text-lg mb-2">{student.name}</h3>
-          <span className={`text-xs px-3 py-1 rounded-full border inline-block ${statusConfig[student.status].color}`}>
+          <span
+            className={`text-xs px-3 py-1 rounded-full border inline-block ${statusConfig[student.status].color}`}
+          >
             {statusConfig[student.status].label}
           </span>
         </div>
@@ -520,5 +541,5 @@ function StudentCard({ student, onClick }: StudentCardProps) {
         )}
       </div>
     </button>
-  );
+  )
 }

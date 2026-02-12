@@ -1,48 +1,37 @@
-import { db } from '../lib/db';
-import { Penalty } from '@prisma/client';
-
 export const PenaltyService = {
-  addPenalty: async (studentId: number, data: { reason: string; type: string }): Promise<Penalty> => {
+  addPenalty: async (studentId: number, data: { reason: string; type: string }) => {
     try {
-      return await db.penalty.create({
-        data: {
-          studentId,
-          reason: data.reason,
-          type: data.type,
-          date: new Date()
-        }
-      });
+      return await window.api.addPenalty(studentId, data)
     } catch (error) {
-      console.error('Error adding penalty:', error);
-      throw error;
+      console.error('Error adding penalty:', error)
+      throw error
     }
   },
 
-  getPenaltiesByStudent: async (studentId: number): Promise<Penalty[]> => {
+  getPenaltiesByStudent: async (studentId: number) => {
     try {
-      return await db.penalty.findMany({
-        where: { studentId },
-        orderBy: { date: 'desc' }
-      });
+      const penalties = await window.api.getPenaltiesByStudent(studentId)
+      // Dates usually come back as strings over IPC
+      return penalties.map((p: any) => ({
+        ...p,
+        date: new Date(p.date)
+      }))
     } catch (error) {
-      console.error('Error fetching student penalties:', error);
-      throw error;
+      console.error('Error fetching student penalties:', error)
+      throw error
     }
   },
 
-  getAllPenalties: async (): Promise<(Penalty & { student: { name: string; universityId: string } })[]> => {
+  getAllPenalties: async () => {
     try {
-      return await db.penalty.findMany({
-        include: {
-          student: {
-            select: { name: true, universityId: true }
-          }
-        },
-        orderBy: { date: 'desc' }
-      });
+      const penalties = await window.api.getAllPenalties()
+      return penalties.map((p: any) => ({
+        ...p,
+        date: new Date(p.date)
+      }))
     } catch (error) {
-        console.error('Error fetching all penalties', error);
-        throw error;
+      console.error('Error fetching all penalties', error)
+      throw error
     }
   }
-};
+}

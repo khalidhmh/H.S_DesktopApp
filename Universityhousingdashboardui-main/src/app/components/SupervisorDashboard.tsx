@@ -1,25 +1,40 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Users, Wrench, MessageSquareWarning, UtensilsCrossed, Megaphone, ClipboardCheck, AlertTriangle } from 'lucide-react';
-import { Button } from '@/app/components/ui/button';
-import { Textarea } from '@/app/components/ui/textarea';
-import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card'
+import {
+  Users,
+  Wrench,
+  MessageSquareWarning,
+  UtensilsCrossed,
+  Megaphone,
+  ClipboardCheck,
+  AlertTriangle
+} from 'lucide-react'
+import { Button } from '@/app/components/ui/button'
+import { Textarea } from '@/app/components/ui/textarea'
+import { useState } from 'react'
 
 interface QuickStatCardProps {
-  title: string;
-  value: string;
-  icon: React.ReactNode;
-  color: string;
-  bgColor: string;
+  title: string
+  value: string
+  icon: React.ReactNode
+  color: string
+  bgColor: string
 }
 
 function QuickStatCard({ title, value, icon, color, bgColor }: QuickStatCardProps) {
   return (
-    <Card className="rounded-2xl shadow-sm hover:shadow-md transition-shadow border-none" style={{ backgroundColor: bgColor }}>
+    <Card
+      className="rounded-2xl shadow-sm hover:shadow-md transition-shadow border-none"
+      style={{ backgroundColor: bgColor }}
+    >
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium mb-2" style={{ color }}>{title}</p>
-            <p className="text-4xl font-bold" style={{ color }}>{value}</p>
+            <p className="text-sm font-medium mb-2" style={{ color }}>
+              {title}
+            </p>
+            <p className="text-4xl font-bold" style={{ color }}>
+              {value}
+            </p>
           </div>
           <div
             className="w-16 h-16 rounded-2xl flex items-center justify-center"
@@ -30,14 +45,14 @@ function QuickStatCard({ title, value, icon, color, bgColor }: QuickStatCardProp
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 interface QuickActionButtonProps {
-  label: string;
-  icon: React.ReactNode;
-  color: string;
-  onClick: () => void;
+  label: string
+  icon: React.ReactNode
+  color: string
+  onClick: () => void
 }
 
 function QuickActionButton({ label, icon, color, onClick }: QuickActionButtonProps) {
@@ -52,18 +67,18 @@ function QuickActionButton({ label, icon, color, onClick }: QuickActionButtonPro
       </div>
       <span className="text-white font-semibold text-sm">{label}</span>
     </button>
-  );
+  )
 }
 
 export function SupervisorDashboard() {
-  const [announcement, setAnnouncement] = useState('');
+  const [announcement, setAnnouncement] = useState('')
 
   const handleSendAnnouncement = () => {
     if (announcement.trim()) {
-      alert(`تم إرسال الإعلان: ${announcement}`);
-      setAnnouncement('');
+      alert(`تم إرسال الإعلان: ${announcement}`)
+      setAnnouncement('')
     }
-  };
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -132,7 +147,9 @@ export function SupervisorDashboard() {
       <Card className="rounded-2xl shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg text-[#002147]">إرسال إعلان للطلاب</CardTitle>
-          <p className="text-sm text-gray-500 mt-1">أرسل رسالة فورية لجميع الطلاب (مثال: تحذير انقطاع المياه)</p>
+          <p className="text-sm text-gray-500 mt-1">
+            أرسل رسالة فورية لجميع الطلاب (مثال: تحذير انقطاع المياه)
+          </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
@@ -177,7 +194,7 @@ export function SupervisorDashboard() {
                 { task: 'متابعة صيانة التكييف - غرفة 305', priority: 'عاجل', time: 'منذ ساعة' },
                 { task: 'التحقق من شكوى الطابق الثاني', priority: 'مهم', time: 'منذ ساعتين' },
                 { task: 'تأكيد حضور الطلاب الجدد', priority: 'عادي', time: 'منذ 3 ساعات' },
-                { task: 'فحص أجهزة الإنذار', priority: 'عاجل', time: 'منذ 4 ساعات' },
+                { task: 'فحص أجهزة الإنذار', priority: 'عاجل', time: 'منذ 4 ساعات' }
               ].map((item, index) => (
                 <div
                   key={index}
@@ -192,8 +209,8 @@ export function SupervisorDashboard() {
                       item.priority === 'عاجل'
                         ? 'bg-red-100 text-red-700'
                         : item.priority === 'مهم'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : 'bg-blue-100 text-blue-700'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-blue-100 text-blue-700'
                     }`}
                   >
                     {item.priority}
@@ -216,7 +233,7 @@ export function SupervisorDashboard() {
                 { time: '10:00', event: 'اجتماع فريق الصيانة', status: 'current' },
                 { time: '13:00', event: 'توزيع الوجبات', status: 'upcoming' },
                 { time: '16:00', event: 'جولة تفقدية للمبنى', status: 'upcoming' },
-                { time: '20:00', event: 'فحص الأمن المسائي', status: 'upcoming' },
+                { time: '20:00', event: 'فحص الأمن المسائي', status: 'upcoming' }
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
                   <div
@@ -224,8 +241,8 @@ export function SupervisorDashboard() {
                       item.status === 'completed'
                         ? 'bg-green-100 text-green-700'
                         : item.status === 'current'
-                        ? 'bg-[#F2C94C] text-[#002147]'
-                        : 'bg-gray-100 text-gray-600'
+                          ? 'bg-[#F2C94C] text-[#002147]'
+                          : 'bg-gray-100 text-gray-600'
                     }`}
                   >
                     {item.time}
@@ -251,5 +268,5 @@ export function SupervisorDashboard() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

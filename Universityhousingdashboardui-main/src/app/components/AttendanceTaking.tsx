@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Clock, ChevronDown, UtensilsCrossed } from 'lucide-react';
-import { MealHeadcountModal } from '@/app/components/MealHeadcountModal';
+import { useState, useEffect } from 'react'
+import { Clock, ChevronDown, UtensilsCrossed } from 'lucide-react'
+import { MealHeadcountModal } from '@/app/components/MealHeadcountModal'
 
 // Mock data for rooms and students
 const mockRoomData = {
@@ -9,156 +9,152 @@ const mockRoomData = {
   3: generateFloorRooms(3),
   4: generateFloorRooms(4),
   5: generateFloorRooms(5),
-  6: generateFloorRooms(6),
-};
+  6: generateFloorRooms(6)
+}
 
 function generateFloorRooms(floor: number) {
   const wings = {
     'شمال A': generateWingRooms(floor, 'A', 0),
     'غرب B': generateWingRooms(floor, 'B', 10),
     'جنوب C': generateWingRooms(floor, 'C', 20),
-    'شرق D': generateWingRooms(floor, 'D', 30),
-  };
-  return wings;
+    'شرق D': generateWingRooms(floor, 'D', 30)
+  }
+  return wings
 }
 
 function generateWingRooms(floor: number, wing: string, offset: number) {
-  const rooms = [];
+  const rooms = []
   for (let i = 1; i <= 8; i++) {
-    const roomNumber = `${floor}${String(offset + i).padStart(2, '0')}`;
-    const studentCount = Math.floor(Math.random() * 3) + 2; // 2-4 students per room
-    const students = [];
-    
+    const roomNumber = `${floor}${String(offset + i).padStart(2, '0')}`
+    const studentCount = Math.floor(Math.random() * 3) + 2 // 2-4 students per room
+    const students = []
+
     for (let j = 0; j < studentCount; j++) {
       // Randomly assign status for demo purposes - 70% present, 20% absent, 10% unchecked
-      const rand = Math.random();
-      let status: boolean | null;
+      const rand = Math.random()
+      let status: boolean | null
       if (rand < 0.7) {
-        status = true; // Present
+        status = true // Present
       } else if (rand < 0.9) {
-        status = false; // Absent
+        status = false // Absent
       } else {
-        status = null; // Unchecked
+        status = null // Unchecked
       }
-      
+
       students.push({
         id: `${roomNumber}-${j}`,
         name: `طالب ${String.fromCharCode(65 + j)} - غرفة ${roomNumber}`,
         studentId: `${20230000 + parseInt(roomNumber) * 10 + j}`,
-        status: status,
-      });
+        status: status
+      })
     }
-    
+
     rooms.push({
       roomNumber,
-      students,
-    });
+      students
+    })
   }
-  return rooms;
+  return rooms
 }
 
 type Room = {
-  roomNumber: string;
+  roomNumber: string
   students: Array<{
-    id: string;
-    name: string;
-    studentId: string;
-    status: boolean | null;
-  }>;
-};
+    id: string
+    name: string
+    studentId: string
+    status: boolean | null
+  }>
+}
 
-type WingRooms = Room[];
+type WingRooms = Room[]
 
 export function AttendanceTaking() {
-  const [selectedFloor, setSelectedFloor] = useState(3);
-  const [expandedRoom, setExpandedRoom] = useState<string | null>(null);
+  const [selectedFloor, setSelectedFloor] = useState(3)
+  const [expandedRoom, setExpandedRoom] = useState<string | null>(null)
   const [roomsData, setRoomsData] = useState<Record<string, WingRooms>>(
     mockRoomData[selectedFloor as keyof typeof mockRoomData]
-  );
+  )
   const [timeRemaining, setTimeRemaining] = useState({
     hours: 1,
     minutes: 30,
-    seconds: 0,
-  });
-  const [isMealModalOpen, setIsMealModalOpen] = useState(false);
+    seconds: 0
+  })
+  const [isMealModalOpen, setIsMealModalOpen] = useState(false)
 
   // Countdown timer
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev.seconds > 0) {
-          return { ...prev, seconds: prev.seconds - 1 };
+          return { ...prev, seconds: prev.seconds - 1 }
         } else if (prev.minutes > 0) {
-          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+          return { ...prev, minutes: prev.minutes - 1, seconds: 59 }
         } else if (prev.hours > 0) {
-          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+          return { hours: prev.hours - 1, minutes: 59, seconds: 59 }
         }
-        return prev;
-      });
-    }, 1000);
+        return prev
+      })
+    }, 1000)
 
-    return () => clearInterval(timer);
-  }, []);
+    return () => clearInterval(timer)
+  }, [])
 
   // Update rooms data when floor changes
   useEffect(() => {
-    setRoomsData(mockRoomData[selectedFloor as keyof typeof mockRoomData]);
-    setExpandedRoom(null);
-  }, [selectedFloor]);
+    setRoomsData(mockRoomData[selectedFloor as keyof typeof mockRoomData])
+    setExpandedRoom(null)
+  }, [selectedFloor])
 
   const handleFloorChange = (floor: number) => {
-    setSelectedFloor(floor);
-  };
+    setSelectedFloor(floor)
+  }
 
-  const toggleStudentAttendance = (
-    wing: string,
-    roomIndex: number,
-    studentId: string
-  ) => {
+  const toggleStudentAttendance = (wing: string, roomIndex: number, studentId: string) => {
     setRoomsData((prev) => {
-      const newData = { ...prev };
-      const room = newData[wing][roomIndex];
-      const student = room.students.find((s) => s.id === studentId);
+      const newData = { ...prev }
+      const room = newData[wing][roomIndex]
+      const student = room.students.find((s) => s.id === studentId)
       if (student) {
         // Toggle: null -> true -> false -> null
         if (student.status === null) {
-          student.status = true;
+          student.status = true
         } else if (student.status === true) {
-          student.status = false;
+          student.status = false
         } else {
-          student.status = null;
+          student.status = null
         }
       }
-      return newData;
-    });
-  };
+      return newData
+    })
+  }
 
   const getRoomStatus = (room: Room) => {
-    const checkedStudents = room.students.filter((s) => s.status !== null);
-    const presentStudents = room.students.filter((s) => s.status === true);
+    const checkedStudents = room.students.filter((s) => s.status !== null)
+    const presentStudents = room.students.filter((s) => s.status === true)
 
     if (checkedStudents.length === 0) {
-      return 'unchecked'; // Grey
+      return 'unchecked' // Grey
     } else if (presentStudents.length === room.students.length) {
-      return 'full'; // Green
+      return 'full' // Green
     } else {
-      return 'partial'; // Yellow
+      return 'partial' // Yellow
     }
-  };
+  }
 
   const getRoomStatusColor = (status: string) => {
     switch (status) {
       case 'full':
-        return 'bg-green-500 border-green-600';
+        return 'bg-green-500 border-green-600'
       case 'partial':
-        return 'bg-yellow-500 border-yellow-600';
+        return 'bg-yellow-500 border-yellow-600'
       case 'unchecked':
       default:
-        return 'bg-gray-300 border-gray-400';
+        return 'bg-gray-300 border-gray-400'
     }
-  };
+  }
 
-  const wings = Object.keys(roomsData);
+  const wings = Object.keys(roomsData)
 
   // Gather all students data from all floors for meal report
   const getAllStudentsData = () => {
@@ -168,15 +164,15 @@ export function AttendanceTaking() {
       'كلية العلوم',
       'كلية الآداب',
       'كلية إدارة الأعمال',
-      'كلية الحاسبات',
-    ];
-    
-    const allStudents = [];
-    
+      'كلية الحاسبات'
+    ]
+
+    const allStudents = []
+
     // Iterate through all floors
     for (let floor = 1; floor <= 6; floor++) {
-      const floorData = mockRoomData[floor as keyof typeof mockRoomData];
-      
+      const floorData = mockRoomData[floor as keyof typeof mockRoomData]
+
       Object.entries(floorData).forEach(([wing, rooms]) => {
         rooms.forEach((room) => {
           room.students.forEach((student) => {
@@ -185,15 +181,15 @@ export function AttendanceTaking() {
               roomNumber: room.roomNumber,
               floor: floor,
               college: colleges[Math.floor(Math.random() * colleges.length)],
-              mealType: Math.random() > 0.85 ? 'Special' : 'Regular', // 15% special meals
-            });
-          });
-        });
-      });
+              mealType: Math.random() > 0.85 ? 'Special' : 'Regular' // 15% special meals
+            })
+          })
+        })
+      })
     }
-    
-    return allStudents;
-  };
+
+    return allStudents
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -202,19 +198,13 @@ export function AttendanceTaking() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           {/* Title */}
           <div>
-            <h1 className="text-2xl font-bold text-[#002147] mb-1">
-              أخذ الحضور
-            </h1>
-            <p className="text-gray-600 text-sm">
-              تسجيل حضور الطلاب في المبنى السكني
-            </p>
+            <h1 className="text-2xl font-bold text-[#002147] mb-1">أخذ الحضور</h1>
+            <p className="text-gray-600 text-sm">تسجيل حضور الطلاب في المبنى السكني</p>
           </div>
 
           {/* Floor Selector */}
           <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">
-              اختر الطابق:
-            </label>
+            <label className="text-sm font-medium text-gray-700">اختر الطابق:</label>
             <div className="relative">
               <select
                 value={selectedFloor}
@@ -266,31 +256,23 @@ export function AttendanceTaking() {
                   </span>
                   {wing}
                 </h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  {roomsData[wing].length} غرفة
-                </p>
+                <p className="text-sm text-gray-600 mt-1">{roomsData[wing].length} غرفة</p>
               </div>
 
               {/* Rooms Grid */}
               <div className="grid grid-cols-4 gap-3">
                 {roomsData[wing].map((room, roomIndex) => {
-                  const status = getRoomStatus(room);
-                  const isExpanded = expandedRoom === room.roomNumber;
+                  const status = getRoomStatus(room)
+                  const isExpanded = expandedRoom === room.roomNumber
 
                   return (
                     <div
                       key={room.roomNumber}
-                      className={`relative ${
-                        isExpanded ? 'col-span-4' : 'col-span-1'
-                      }`}
+                      className={`relative ${isExpanded ? 'col-span-4' : 'col-span-1'}`}
                     >
                       {/* Room Card */}
                       <button
-                        onClick={() =>
-                          setExpandedRoom(
-                            isExpanded ? null : room.roomNumber
-                          )
-                        }
+                        onClick={() => setExpandedRoom(isExpanded ? null : room.roomNumber)}
                         className={`w-full aspect-square rounded-lg border-2 ${getRoomStatusColor(
                           status
                         )} hover:scale-105 transition-all shadow-md hover:shadow-lg flex flex-col items-center justify-center gap-1 ${
@@ -321,34 +303,26 @@ export function AttendanceTaking() {
                                   <p className="text-sm font-medium text-[#002147]">
                                     {student.name}
                                   </p>
-                                  <p className="text-xs text-gray-500">
-                                    {student.studentId}
-                                  </p>
+                                  <p className="text-xs text-gray-500">{student.studentId}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                   {/* Toggle Switch */}
                                   <button
                                     onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleStudentAttendance(
-                                        wing,
-                                        roomIndex,
-                                        student.id
-                                      );
+                                      e.stopPropagation()
+                                      toggleStudentAttendance(wing, roomIndex, student.id)
                                     }}
                                     className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
                                       student.status === true
                                         ? 'bg-green-500'
                                         : student.status === false
-                                        ? 'bg-red-500'
-                                        : 'bg-gray-300'
+                                          ? 'bg-red-500'
+                                          : 'bg-gray-300'
                                     }`}
                                   >
                                     <span
                                       className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform ${
-                                        student.status !== null
-                                          ? 'translate-x-1'
-                                          : 'translate-x-7'
+                                        student.status !== null ? 'translate-x-1' : 'translate-x-7'
                                       }`}
                                     />
                                   </button>
@@ -357,15 +331,15 @@ export function AttendanceTaking() {
                                       student.status === true
                                         ? 'text-green-600'
                                         : student.status === false
-                                        ? 'text-red-600'
-                                        : 'text-gray-500'
+                                          ? 'text-red-600'
+                                          : 'text-gray-500'
                                     }`}
                                   >
                                     {student.status === true
                                       ? 'حاضر'
                                       : student.status === false
-                                      ? 'غائب'
-                                      : 'لم يتم'}
+                                        ? 'غائب'
+                                        : 'لم يتم'}
                                   </span>
                                 </div>
                               </div>
@@ -374,7 +348,7 @@ export function AttendanceTaking() {
                         </div>
                       )}
                     </div>
-                  );
+                  )
                 })}
               </div>
             </div>
@@ -420,5 +394,5 @@ export function AttendanceTaking() {
         allStudentsData={getAllStudentsData()}
       />
     </div>
-  );
+  )
 }

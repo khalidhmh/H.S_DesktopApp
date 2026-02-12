@@ -1,30 +1,36 @@
-export type StudentStatus = 'credit' | 'regular' | 'expat';
+export type StudentStatus = 'credit' | 'regular' | 'expat'
 
 export interface Student {
-  id: string;
-  name: string;
-  photo: string;
-  college: string;
-  year: number;
-  roomNumber: string;
-  floor: number;
-  governorate: string;
-  status: StudentStatus;
-  nationalId: string;
-  phone: string;
-  email: string;
-  guardianName: string;
-  guardianPhone: string;
-  guardianRelation: string;
-  absenceCount: number;
-  penaltyCount: number;
+  id: string
+  name: string
+  photo: string
+  college: string
+  year: number
+  roomNumber: string
+  floor: number
+  governorate: string
+  status: StudentStatus
+  nationalId: string
+  phone: string
+  email: string
+  guardianName: string
+  guardianPhone: string
+  guardianRelation: string
+  absenceCount: number
+  penaltyCount: number
   // Booleans for UI flags
-  hasPenalties: boolean;
-  exceededAbsence: boolean;
+  hasPenalties: boolean
+  exceededAbsence: boolean
   // Extra fields for details
-  activities?: { type: 'sports' | 'cultural' | 'social'; name: string; date: string }[];
-  attendanceHistory?: { date: string; status: 'present' | 'absent' | 'pending' }[];
-  penaltiesHistory?: { id: string; title: string; date: string; status: 'active' | 'resolved'; description: string }[];
+  activities?: { type: 'sports' | 'cultural' | 'social'; name: string; date: string }[]
+  attendanceHistory?: { date: string; status: 'present' | 'absent' | 'pending' }[]
+  penaltiesHistory?: {
+    id: string
+    title: string
+    date: string
+    status: 'active' | 'resolved'
+    description: string
+  }[]
 }
 
 export const mockStudents: Student[] = [
@@ -48,16 +54,14 @@ export const mockStudents: Student[] = [
     penaltyCount: 0,
     hasPenalties: false,
     exceededAbsence: false,
-    activities: [
-      { type: 'sports', name: 'دوري كرة القدم بالجامعة', date: '2023-11-15' },
-    ],
+    activities: [{ type: 'sports', name: 'دوري كرة القدم بالجامعة', date: '2023-11-15' }],
     attendanceHistory: [
       { date: '2023-10-01', status: 'present' },
       { date: '2023-10-02', status: 'present' },
       { date: '2023-10-03', status: 'absent' },
-      { date: '2023-10-04', status: 'present' },
+      { date: '2023-10-04', status: 'present' }
     ],
-    penaltiesHistory: [],
+    penaltiesHistory: []
   },
   {
     id: '2',
@@ -83,11 +87,17 @@ export const mockStudents: Student[] = [
     attendanceHistory: [
       { date: '2023-10-01', status: 'present' },
       { date: '2023-10-02', status: 'absent' },
-      { date: '2023-10-03', status: 'absent' },
+      { date: '2023-10-03', status: 'absent' }
     ],
     penaltiesHistory: [
-      { id: 'p1', title: 'إزعاج', date: '2023-11-20', status: 'active', description: 'صوت مرتفع بعد 11 مساءً' },
-    ],
+      {
+        id: 'p1',
+        title: 'إزعاج',
+        date: '2023-11-20',
+        status: 'active',
+        description: 'صوت مرتفع بعد 11 مساءً'
+      }
+    ]
   },
   {
     id: '3',
@@ -109,10 +119,8 @@ export const mockStudents: Student[] = [
     penaltyCount: 0,
     hasPenalties: false,
     exceededAbsence: false,
-    activities: [
-        { type: 'cultural', name: 'ورشة النادي العلمي', date: '2023-12-05' },
-    ],
+    activities: [{ type: 'cultural', name: 'ورشة النادي العلمي', date: '2023-12-05' }],
     attendanceHistory: [],
-    penaltiesHistory: [],
+    penaltiesHistory: []
   }
-];
+]

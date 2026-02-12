@@ -1,28 +1,28 @@
-import { useState } from 'react';
-import { 
-  Bell, 
-  Send, 
-  Users, 
-  Building, 
-  DoorOpen, 
-  CheckCircle2, 
-  AlertCircle, 
-  Clock, 
+import { useState } from 'react'
+import {
+  Bell,
+  Send,
+  Users,
+  Building,
+  DoorOpen,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
   ArrowLeft,
   Filter,
   MoreVertical,
   User,
   Megaphone
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 
 interface Notification {
-  id: string;
-  title: string;
-  time: string;
-  type: 'fault' | 'approval' | 'complaint' | 'system';
-  description: string;
-  actionUrl: string;
+  id: string
+  title: string
+  time: string
+  type: 'fault' | 'approval' | 'complaint' | 'system'
+  description: string
+  actionUrl: string
 }
 
 const mockNotifications: Notification[] = [
@@ -50,26 +50,45 @@ const mockNotifications: Notification[] = [
     description: 'هناك شكوى جماعية من طلاب الطابق الرابع بخصوص وجبة العشاء.',
     actionUrl: '/complaints/urgent'
   }
-];
+]
 
 export function CommunicationPage() {
-  const [broadcastMessage, setBroadcastMessage] = useState('');
-  const [targetAudience, setTargetAudience] = useState('all');
-  const supervisorName = 'م. أحمد خالد';
+  const [broadcastMessage, setBroadcastMessage] = useState('')
+  const [targetAudience, setTargetAudience] = useState('all')
+  const supervisorName = 'م. أحمد خالد'
 
   const getTypeIcon = (type: Notification['type']) => {
     switch (type) {
-      case 'fault': return <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center"><AlertCircle size={20} /></div>;
-      case 'approval': return <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><CheckCircle2 size={20} /></div>;
-      case 'complaint': return <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center"><Megaphone size={20} /></div>;
-      default: return <div className="w-10 h-10 rounded-xl bg-gray-50 text-gray-600 flex items-center justify-center"><Bell size={20} /></div>;
+      case 'fault':
+        return (
+          <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+            <AlertCircle size={20} />
+          </div>
+        )
+      case 'approval':
+        return (
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <CheckCircle2 size={20} />
+          </div>
+        )
+      case 'complaint':
+        return (
+          <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+            <Megaphone size={20} />
+          </div>
+        )
+      default:
+        return (
+          <div className="w-10 h-10 rounded-xl bg-gray-50 text-gray-600 flex items-center justify-center">
+            <Bell size={20} />
+          </div>
+        )
     }
-  };
+  }
 
   return (
     <div className="p-6 bg-[#F5F7FA] h-full overflow-y-auto" dir="rtl">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
-        
         {/* Section A: System Notifications (Inbox) */}
         <div className="flex-1 space-y-6">
           <div className="flex items-center justify-between">
@@ -85,24 +104,26 @@ export function CommunicationPage() {
 
           <div className="space-y-4">
             {mockNotifications.map((notif) => (
-              <motion.div 
+              <motion.div
                 key={notif.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 className="bg-white p-5 rounded-[24px] shadow-sm border border-gray-100 flex items-start gap-4 group hover:border-[#F2C94C]/50 transition-all"
               >
                 {getTypeIcon(notif.type)}
-                
+
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-[#002147] group-hover:text-[#F2C94C] transition-colors">{notif.title}</h3>
+                    <h3 className="font-bold text-[#002147] group-hover:text-[#F2C94C] transition-colors">
+                      {notif.title}
+                    </h3>
                     <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1">
                       <Clock size={12} />
                       {notif.time}
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 mb-4 leading-relaxed">{notif.description}</p>
-                  
+
                   <div className="flex items-center justify-between">
                     <button className="text-xs font-bold text-blue-600 flex items-center gap-1 hover:underline">
                       عرض التفاصيل واتخاذ إجراء
@@ -127,7 +148,7 @@ export function CommunicationPage() {
           <div className="bg-[#002147] rounded-[32px] p-8 text-white shadow-xl relative overflow-hidden">
             {/* Background Accent */}
             <div className="absolute -top-12 -left-12 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-            
+
             <div className="relative z-10">
               <h2 className="text-xl font-black mb-6 flex items-center gap-3">
                 <Send size={24} className="text-[#F2C94C]" />
@@ -138,21 +159,21 @@ export function CommunicationPage() {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-white/60">الجمهور المستهدف</label>
                   <div className="grid grid-cols-3 gap-2">
-                    <button 
+                    <button
                       onClick={() => setTargetAudience('all')}
                       className={`py-2 px-1 rounded-xl text-[10px] font-black transition-all flex flex-col items-center gap-1 ${targetAudience === 'all' ? 'bg-[#F2C94C] text-[#002147]' : 'bg-white/10 text-white/60 hover:bg-white/20'}`}
                     >
                       <Building size={16} />
                       كل المبنى
                     </button>
-                    <button 
+                    <button
                       onClick={() => setTargetAudience('floor')}
                       className={`py-2 px-1 rounded-xl text-[10px] font-black transition-all flex flex-col items-center gap-1 ${targetAudience === 'floor' ? 'bg-[#F2C94C] text-[#002147]' : 'bg-white/10 text-white/60 hover:bg-white/20'}`}
                     >
                       <Filter size={16} />
                       طابق محدد
                     </button>
-                    <button 
+                    <button
                       onClick={() => setTargetAudience('room')}
                       className={`py-2 px-1 rounded-xl text-[10px] font-black transition-all flex flex-col items-center gap-1 ${targetAudience === 'room' ? 'bg-[#F2C94C] text-[#002147]' : 'bg-white/10 text-white/60 hover:bg-white/20'}`}
                     >
@@ -164,7 +185,7 @@ export function CommunicationPage() {
 
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-white/60">نص الرسالة</label>
-                  <textarea 
+                  <textarea
                     placeholder="اكتب التعميم هنا... (مثال: سيتم قطع المياه يوم الثلاثاء للصيانة)"
                     className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-[#F2C94C] outline-none min-h-[150px] resize-none text-white placeholder:text-white/30"
                     value={broadcastMessage}
@@ -173,7 +194,9 @@ export function CommunicationPage() {
                 </div>
 
                 <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-                  <p className="text-[10px] font-bold text-white/40 mb-2 uppercase tracking-widest">معاينة التوقيع</p>
+                  <p className="text-[10px] font-bold text-white/40 mb-2 uppercase tracking-widest">
+                    معاينة التوقيع
+                  </p>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-[#F2C94C] flex items-center justify-center text-[#002147]">
                       <User size={14} />
@@ -192,7 +215,7 @@ export function CommunicationPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="mt-6 bg-white p-6 rounded-[24px] border border-gray-100">
             <h4 className="text-sm font-bold text-[#002147] mb-4">إحصائيات الإرسال</h4>
             <div className="space-y-4">
@@ -207,8 +230,7 @@ export function CommunicationPage() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  );
+  )
 }

@@ -1,27 +1,39 @@
-import { useState } from 'react';
-import { Plus, Filter, Search, Droplet, Zap, Flame, Wifi, Wind, Wrench, MessageSquare, MoreVertical } from 'lucide-react';
-import { AddFaultModal } from '@/app/components/AddFaultModal';
+import { useState } from 'react'
+import {
+  Plus,
+  Filter,
+  Search,
+  Droplet,
+  Zap,
+  Flame,
+  Wifi,
+  Wind,
+  Wrench,
+  MessageSquare,
+  MoreVertical
+} from 'lucide-react'
+import { AddFaultModal } from '@/app/components/AddFaultModal'
 
-type FaultStatus = 'pending' | 'in-progress' | 'completed';
+type FaultStatus = 'pending' | 'in-progress' | 'completed'
 
-type FaultType = 'plumbing' | 'electric' | 'gas' | 'internet' | 'ac' | 'other';
+type FaultType = 'plumbing' | 'electric' | 'gas' | 'internet' | 'ac' | 'other'
 
 interface Fault {
-  id: string;
-  type: FaultType;
-  title: string;
-  description: string;
+  id: string
+  type: FaultType
+  title: string
+  description: string
   location: {
-    floor: number;
-    wing: string;
-    roomType: string;
-    roomNumber?: string;
-  };
-  status: FaultStatus;
-  reportedBy: string;
-  reportedDate: string;
-  photoUrl?: string;
-  priority: 'low' | 'medium' | 'high';
+    floor: number
+    wing: string
+    roomType: string
+    roomNumber?: string
+  }
+  status: FaultStatus
+  reportedBy: string
+  reportedDate: string
+  photoUrl?: string
+  priority: 'low' | 'medium' | 'high'
 }
 
 const faultTypeIcons: Record<FaultType, { icon: JSX.Element; color: string; label: string }> = {
@@ -30,8 +42,8 @@ const faultTypeIcons: Record<FaultType, { icon: JSX.Element; color: string; labe
   gas: { icon: <Flame size={20} />, color: 'text-red-600', label: 'غاز' },
   internet: { icon: <Wifi size={20} />, color: 'text-purple-600', label: 'إنترنت' },
   ac: { icon: <Wind size={20} />, color: 'text-cyan-600', label: 'تكييف' },
-  other: { icon: <Wrench size={20} />, color: 'text-gray-600', label: 'أخرى' },
-};
+  other: { icon: <Wrench size={20} />, color: 'text-gray-600', label: 'أخرى' }
+}
 
 // Mock data
 const mockFaults: Fault[] = [
@@ -45,7 +57,7 @@ const mockFaults: Fault[] = [
     reportedBy: 'أحمد محمد',
     reportedDate: '2025-01-29',
     photoUrl: 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400',
-    priority: 'high',
+    priority: 'high'
   },
   {
     id: '2',
@@ -56,7 +68,7 @@ const mockFaults: Fault[] = [
     status: 'in-progress',
     reportedBy: 'خالد علي',
     reportedDate: '2025-01-28',
-    priority: 'medium',
+    priority: 'medium'
   },
   {
     id: '3',
@@ -67,7 +79,7 @@ const mockFaults: Fault[] = [
     status: 'pending',
     reportedBy: 'محمد سعد',
     reportedDate: '2025-01-30',
-    priority: 'high',
+    priority: 'high'
   },
   {
     id: '4',
@@ -78,7 +90,7 @@ const mockFaults: Fault[] = [
     status: 'in-progress',
     reportedBy: 'عمر حسن',
     reportedDate: '2025-01-29',
-    priority: 'medium',
+    priority: 'medium'
   },
   {
     id: '5',
@@ -89,7 +101,7 @@ const mockFaults: Fault[] = [
     status: 'completed',
     reportedBy: 'سعد الدين',
     reportedDate: '2025-01-27',
-    priority: 'low',
+    priority: 'low'
   },
   {
     id: '6',
@@ -100,46 +112,44 @@ const mockFaults: Fault[] = [
     status: 'completed',
     reportedBy: 'يوسف عبدالله',
     reportedDate: '2025-01-26',
-    priority: 'medium',
-  },
-];
+    priority: 'medium'
+  }
+]
 
 export function MaintenancePage() {
-  const [faults, setFaults] = useState<Fault[]>(mockFaults);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<FaultType | 'all'>('all');
+  const [faults, setFaults] = useState<Fault[]>(mockFaults)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterType, setFilterType] = useState<FaultType | 'all'>('all')
 
   const filteredFaults = faults.filter((fault) => {
     const matchesSearch =
       fault.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      fault.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === 'all' || fault.type === filterType;
-    return matchesSearch && matchesType;
-  });
+      fault.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesType = filterType === 'all' || fault.type === filterType
+    return matchesSearch && matchesType
+  })
 
-  const pendingFaults = filteredFaults.filter((f) => f.status === 'pending');
-  const inProgressFaults = filteredFaults.filter((f) => f.status === 'in-progress');
-  const completedFaults = filteredFaults.filter((f) => f.status === 'completed');
+  const pendingFaults = filteredFaults.filter((f) => f.status === 'pending')
+  const inProgressFaults = filteredFaults.filter((f) => f.status === 'in-progress')
+  const completedFaults = filteredFaults.filter((f) => f.status === 'completed')
 
   const handleStatusChange = (faultId: string, newStatus: FaultStatus) => {
     setFaults((prev) =>
-      prev.map((fault) =>
-        fault.id === faultId ? { ...fault, status: newStatus } : fault
-      )
-    );
-  };
+      prev.map((fault) => (fault.id === faultId ? { ...fault, status: newStatus } : fault))
+    )
+  }
 
   const handleAddFault = (newFault: Omit<Fault, 'id' | 'reportedDate' | 'reportedBy'>) => {
     const fault: Fault = {
       ...newFault,
       id: Date.now().toString(),
       reportedBy: 'المستخدم الحالي',
-      reportedDate: new Date().toISOString().split('T')[0],
-    };
-    setFaults((prev) => [fault, ...prev]);
-    setIsAddModalOpen(false);
-  };
+      reportedDate: new Date().toISOString().split('T')[0]
+    }
+    setFaults((prev) => [fault, ...prev])
+    setIsAddModalOpen(false)
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -148,12 +158,8 @@ export function MaintenancePage() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           {/* Title */}
           <div>
-            <h1 className="text-2xl font-bold text-[#002147] mb-1">
-              إدارة الصيانة والأعطال
-            </h1>
-            <p className="text-gray-600 text-sm">
-              متابعة وإدارة طلبات الصيانة والأعطال
-            </p>
+            <h1 className="text-2xl font-bold text-[#002147] mb-1">إدارة الصيانة والأعطال</h1>
+            <p className="text-gray-600 text-sm">متابعة وإدارة طلبات الصيانة والأعطال</p>
           </div>
 
           {/* Add Fault Button */}
@@ -242,35 +248,32 @@ export function MaintenancePage() {
 
       {/* Add Fault Modal */}
       {isAddModalOpen && (
-        <AddFaultModal
-          onClose={() => setIsAddModalOpen(false)}
-          onSubmit={handleAddFault}
-        />
+        <AddFaultModal onClose={() => setIsAddModalOpen(false)} onSubmit={handleAddFault} />
       )}
     </div>
-  );
+  )
 }
 
 interface KanbanColumnProps {
-  title: string;
-  count: number;
-  color: 'yellow' | 'blue' | 'green';
-  faults: Fault[];
-  onStatusChange: (faultId: string, newStatus: FaultStatus) => void;
+  title: string
+  count: number
+  color: 'yellow' | 'blue' | 'green'
+  faults: Fault[]
+  onStatusChange: (faultId: string, newStatus: FaultStatus) => void
 }
 
 function KanbanColumn({ title, count, color, faults, onStatusChange }: KanbanColumnProps) {
   const colorClasses = {
     yellow: 'bg-yellow-50 border-yellow-200',
     blue: 'bg-blue-50 border-blue-200',
-    green: 'bg-green-50 border-green-200',
-  };
+    green: 'bg-green-50 border-green-200'
+  }
 
   const headerColors = {
     yellow: 'bg-yellow-500',
     blue: 'bg-blue-500',
-    green: 'bg-green-500',
-  };
+    green: 'bg-green-500'
+  }
 
   return (
     <div className={`rounded-2xl border-2 ${colorClasses[color]} overflow-hidden`}>
@@ -278,9 +281,7 @@ function KanbanColumn({ title, count, color, faults, onStatusChange }: KanbanCol
       <div className={`${headerColors[color]} text-white p-4`}>
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-lg">{title}</h3>
-          <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-bold">
-            {count}
-          </span>
+          <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-bold">{count}</span>
         </div>
       </div>
 
@@ -297,40 +298,36 @@ function KanbanColumn({ title, count, color, faults, onStatusChange }: KanbanCol
         )}
       </div>
     </div>
-  );
+  )
 }
 
 interface FaultCardProps {
-  fault: Fault;
-  onStatusChange: (faultId: string, newStatus: FaultStatus) => void;
+  fault: Fault
+  onStatusChange: (faultId: string, newStatus: FaultStatus) => void
 }
 
 function FaultCard({ fault, onStatusChange }: FaultCardProps) {
-  const [showActions, setShowActions] = useState(false);
-  const faultIcon = faultTypeIcons[fault.type];
+  const [showActions, setShowActions] = useState(false)
+  const faultIcon = faultTypeIcons[fault.type]
 
   const priorityColors = {
     high: 'bg-red-100 text-red-700 border-red-200',
     medium: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    low: 'bg-green-100 text-green-700 border-green-200',
-  };
+    low: 'bg-green-100 text-green-700 border-green-200'
+  }
 
   const priorityLabels = {
     high: 'عالية',
     medium: 'متوسطة',
-    low: 'منخفضة',
-  };
+    low: 'منخفضة'
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-100 overflow-hidden">
       {/* Photo Thumbnail */}
       {fault.photoUrl && (
         <div className="h-32 bg-gray-200 overflow-hidden">
-          <img
-            src={fault.photoUrl}
-            alt={fault.title}
-            className="w-full h-full object-cover"
-          />
+          <img src={fault.photoUrl} alt={fault.title} className="w-full h-full object-cover" />
         </div>
       )}
 
@@ -338,12 +335,12 @@ function FaultCard({ fault, onStatusChange }: FaultCardProps) {
         {/* Header with Type Icon and Priority */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className={`${faultIcon.color} bg-gray-50 p-2 rounded-lg`}>
-              {faultIcon.icon}
-            </div>
+            <div className={`${faultIcon.color} bg-gray-50 p-2 rounded-lg`}>{faultIcon.icon}</div>
             <div>
               <h4 className="font-bold text-[#002147] text-sm">{fault.title}</h4>
-              <p className={`text-xs px-2 py-0.5 rounded border inline-block mt-1 ${priorityColors[fault.priority]}`}>
+              <p
+                className={`text-xs px-2 py-0.5 rounded border inline-block mt-1 ${priorityColors[fault.priority]}`}
+              >
                 {priorityLabels[fault.priority]}
               </p>
             </div>
@@ -357,9 +354,7 @@ function FaultCard({ fault, onStatusChange }: FaultCardProps) {
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-          {fault.description}
-        </p>
+        <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{fault.description}</p>
 
         {/* Location */}
         <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
@@ -393,8 +388,8 @@ function FaultCard({ fault, onStatusChange }: FaultCardProps) {
               <div className="absolute left-0 right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 z-10 overflow-hidden">
                 <button
                   onClick={() => {
-                    onStatusChange(fault.id, 'pending');
-                    setShowActions(false);
+                    onStatusChange(fault.id, 'pending')
+                    setShowActions(false)
                   }}
                   className="w-full text-right px-4 py-2 hover:bg-yellow-50 text-sm transition-colors"
                 >
@@ -402,8 +397,8 @@ function FaultCard({ fault, onStatusChange }: FaultCardProps) {
                 </button>
                 <button
                   onClick={() => {
-                    onStatusChange(fault.id, 'in-progress');
-                    setShowActions(false);
+                    onStatusChange(fault.id, 'in-progress')
+                    setShowActions(false)
                   }}
                   className="w-full text-right px-4 py-2 hover:bg-blue-50 text-sm transition-colors"
                 >
@@ -411,8 +406,8 @@ function FaultCard({ fault, onStatusChange }: FaultCardProps) {
                 </button>
                 <button
                   onClick={() => {
-                    onStatusChange(fault.id, 'completed');
-                    setShowActions(false);
+                    onStatusChange(fault.id, 'completed')
+                    setShowActions(false)
                   }}
                   className="w-full text-right px-4 py-2 hover:bg-green-50 text-sm transition-colors"
                 >
@@ -424,5 +419,5 @@ function FaultCard({ fault, onStatusChange }: FaultCardProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

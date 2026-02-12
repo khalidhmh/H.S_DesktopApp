@@ -1,83 +1,40 @@
-import { db } from '../lib/db';
+// src/renderer/src/services/attendance.service.ts
 
-export const attendanceService = {
-  // Get attendance records for today for a specific building (optional filtering) or all
+export const AttendanceService = {
+  // جلب سجلات حضور اليوم
   async getTodayAttendance(building?: string) {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    return await db.attendance.findMany({
-      where: {
-        date: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
-        student: building ? {
-          room: {
-              building: building
-          }
-        } : undefined
-      },
-      include: {
-        student: true
-      }
-    });
+    // @ts-ignore
+    const records = await window.api.getTodayAttendance(building)
+    // تحويل التاريخ من نص إلى كائن Date للعرض
+    return records.map((r: any) => ({
+      ...r,
+      date: new Date(r.date)
+    }))
   },
 
-  // Submit attendance (bulk create or update)
+  // إرسال قائمة الحضور (تسجيل جماعي)
   async submitAttendance(records: { studentId: number; status: string; note?: string }[]) {
-     const results = [];
-     const startOfDay = new Date();
-     startOfDay.setHours(0, 0, 0, 0);
-     const endOfDay = new Date();
-     endOfDay.setHours(23, 59, 59, 999);
-
-     for (const record of records) {
-         const existing = await db.attendance.findFirst({
-             where: {
-                 studentId: record.studentId,
-                 date: { gte: startOfDay, lte: endOfDay }
-             }
-         });
-
-         if (existing) {
-             const updated = await db.attendance.update({
-                 where: { id: existing.id },
-                 data: { status: record.status, note: record.note }
-             });
-             results.push(updated);
-         } else {
-             const created = await db.attendance.create({
-                 data: {
-                     studentId: record.studentId,
-                     status: record.status,
-                     note: record.note
-                 }
-             });
-             results.push(created);
-         }
-     }
-     return results;
+    // @ts-ignore
+    return await window.api.submitAttendance(records)
   },
 
+  // سجل حضور طالب معين
   async getAttendanceHistory(studentId: number) {
-    return await db.attendance.findMany({
-      where: { studentId },
-      orderBy: { date: 'desc' }
-    });
+    // @ts-ignore
+    const history = await window.api.getAttendanceHistory(studentId)
+    return history.map((h: any) => ({
+      ...h,
+      date: new Date(h.date)
+    }))
   },
 
+  // كل السجلات (للتقارير)
   async getAllAttendanceLogs() {
-      return await db.attendance.findMany({
-          include: {
-              student: {
-                  select: { name: true, universityId: true }
-              }
-          },
-          orderBy: { date: 'desc' }
-      });
+    // @ts-ignore
+    const logs = await window.api.getAllAttendanceLogs()
+    return logs.map((l: any) => ({
+      ...l,
+      date: new Date(l.date)
+    }))
   }
-};
+}

@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { X, AlertTriangle } from 'lucide-react';
+import { useState } from 'react'
+import { X, AlertTriangle } from 'lucide-react'
 
 interface IssuePenaltyModalProps {
-  studentName: string;
-  onClose: () => void;
+  studentName: string
+  onClose: () => void
 }
 
 const penaltyTypes = [
@@ -13,33 +13,36 @@ const penaltyTypes = [
   'التدخين داخل الغرفة',
   'عدم احترام مواعيد الحضور',
   'إتلاف ممتلكات',
-  'أخرى',
-];
+  'أخرى'
+]
 
 const severityLevels = [
   { id: 'low', label: 'منخفضة', color: 'bg-yellow-500' },
   { id: 'medium', label: 'متوسطة', color: 'bg-orange-500' },
-  { id: 'high', label: 'عالية', color: 'bg-red-500' },
-];
+  { id: 'high', label: 'عالية', color: 'bg-red-500' }
+]
 
 export function IssuePenaltyModal({ studentName, onClose }: IssuePenaltyModalProps) {
-  const [penaltyType, setPenaltyType] = useState('');
-  const [customType, setCustomType] = useState('');
-  const [description, setDescription] = useState('');
-  const [severity, setSeverity] = useState<'low' | 'medium' | 'high'>('medium');
+  const [penaltyType, setPenaltyType] = useState('')
+  const [customType, setCustomType] = useState('')
+  const [description, setDescription] = useState('')
+  const [severity, setSeverity] = useState<'low' | 'medium' | 'high'>('medium')
 
   const handleSubmit = () => {
     if (!penaltyType || (penaltyType === 'أخرى' && !customType) || !description) {
-      alert('الرجاء إكمال جميع الحقول المطلوبة');
-      return;
+      alert('الرجاء إكمال جميع الحقول المطلوبة')
+      return
     }
 
-    alert('تم إصدار الجزاء بنجاح');
-    onClose();
-  };
+    alert('تم إصدار الجزاء بنجاح')
+    onClose()
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4"
+      onClick={onClose}
+    >
       <div
         className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden"
         onClick={(e) => e.stopPropagation()}
@@ -70,7 +73,10 @@ export function IssuePenaltyModal({ studentName, onClose }: IssuePenaltyModalPro
             <AlertTriangle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
             <div className="text-sm text-red-800">
               <p className="font-bold mb-1">تنبيه:</p>
-              <p>إصدار الجزاء هو إجراء رسمي سيتم تسجيله في ملف الطالب. يرجى التأكد من صحة المعلومات قبل الإرسال.</p>
+              <p>
+                إصدار الجزاء هو إجراء رسمي سيتم تسجيله في ملف الطالب. يرجى التأكد من صحة المعلومات
+                قبل الإرسال.
+              </p>
             </div>
           </div>
 
@@ -151,9 +157,7 @@ export function IssuePenaltyModal({ studentName, onClose }: IssuePenaltyModalPro
           {/* Date */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-[#002147] mb-2">
-                تاريخ المخالفة
-              </label>
+              <label className="block text-sm font-bold text-[#002147] mb-2">تاريخ المخالفة</label>
               <input
                 type="date"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
@@ -161,9 +165,7 @@ export function IssuePenaltyModal({ studentName, onClose }: IssuePenaltyModalPro
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#002147] mb-2">
-                الوقت التقريبي
-              </label>
+              <label className="block text-sm font-bold text-[#002147] mb-2">الوقت التقريبي</label>
               <input
                 type="time"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
@@ -182,7 +184,9 @@ export function IssuePenaltyModal({ studentName, onClose }: IssuePenaltyModalPro
           </button>
           <button
             onClick={handleSubmit}
-            disabled={!penaltyType || (penaltyType === 'أخرى' && !customType) || description.length < 20}
+            disabled={
+              !penaltyType || (penaltyType === 'أخرى' && !customType) || description.length < 20
+            }
             className="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors shadow-md"
           >
             إصدار الجزاء
@@ -190,5 +194,5 @@ export function IssuePenaltyModal({ studentName, onClose }: IssuePenaltyModalPro
         </div>
       </div>
     </div>
-  );
+  )
 }

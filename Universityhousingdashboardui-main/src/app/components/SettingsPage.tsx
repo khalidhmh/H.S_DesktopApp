@@ -1,41 +1,41 @@
-import { useState } from 'react';
-import { 
-  ShieldCheck, 
-  Database, 
-  Settings2, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  CloudDownload, 
-  AlertTriangle, 
+import { useState } from 'react'
+import {
+  ShieldCheck,
+  Database,
+  Settings2,
+  Lock,
+  Eye,
+  EyeOff,
+  CloudDownload,
+  AlertTriangle,
   FileSpreadsheet,
   Volume2,
   Moon,
   Printer
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
-import { DataImportWizard } from '@/app/components/ImportWizardModal';
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
+import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback'
+import { DataImportWizard } from '@/app/components/ImportWizardModal'
 
-type TabId = 'security' | 'data' | 'general';
+type TabId = 'security' | 'data' | 'general'
 
 export function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<TabId>('security');
-  const [showImportWizard, setShowImportWizard] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabId>('security')
+  const [showImportWizard, setShowImportWizard] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true)
 
   const tabs = [
     { id: 'security', label: 'أمان الحساب', icon: <ShieldCheck size={20} /> },
     { id: 'data', label: 'إدارة البيانات', icon: <Database size={20} /> },
-    { id: 'general', label: 'الإعدادات العامة', icon: <Settings2 size={20} /> },
-  ];
+    { id: 'general', label: 'الإعدادات العامة', icon: <Settings2 size={20} /> }
+  ]
 
   return (
     <div className="p-6 h-full bg-[#F5F7FA]">
       <div className="max-w-6xl mx-auto h-full flex flex-col">
         <h1 className="text-2xl font-bold text-[#002147] mb-6">الإعدادات</h1>
-        
+
         <div className="flex flex-row-reverse gap-6 h-full overflow-hidden">
           {/* Left Vertical Tabs (Visually left in RTL) */}
           <div className="w-64 flex-shrink-0">
@@ -74,8 +74,8 @@ export function SettingsPage() {
               )}
               {activeTab === 'general' && (
                 <MotionContent key="general">
-                  <GeneralPreferencesView 
-                    isDarkMode={isDarkMode} 
+                  <GeneralPreferencesView
+                    isDarkMode={isDarkMode}
                     setIsDarkMode={setIsDarkMode}
                     isNotificationsEnabled={isNotificationsEnabled}
                     setIsNotificationsEnabled={setIsNotificationsEnabled}
@@ -88,11 +88,9 @@ export function SettingsPage() {
       </div>
 
       {/* Import Wizard Modal */}
-      {showImportWizard && (
-        <DataImportWizard onClose={() => setShowImportWizard(false)} />
-      )}
+      {showImportWizard && <DataImportWizard onClose={() => setShowImportWizard(false)} />}
     </div>
-  );
+  )
 }
 
 function MotionContent({ children }: { children: React.ReactNode }) {
@@ -105,11 +103,11 @@ function MotionContent({ children }: { children: React.ReactNode }) {
     >
       {children}
     </motion.div>
-  );
+  )
 }
 
 function ProfileSecurityView() {
-  const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
+  const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false })
 
   return (
     <div className="space-y-6">
@@ -122,7 +120,9 @@ function ProfileSecurityView() {
         <div className="space-y-6 max-w-lg">
           {/* Username Field (Disabled) */}
           <div className="space-y-2">
-            <label className="block text-sm font-bold text-gray-700">اسم المستخدم (المعرف الشخصي)</label>
+            <label className="block text-sm font-bold text-gray-700">
+              اسم المستخدم (المعرف الشخصي)
+            </label>
             <div className="relative">
               <input
                 type="text"
@@ -134,7 +134,9 @@ function ProfileSecurityView() {
                 <Lock size={18} />
               </div>
             </div>
-            <p className="text-xs text-gray-400 font-medium">لا يمكن تغيير اسم المستخدم لأسباب أمنية.</p>
+            <p className="text-xs text-gray-400 font-medium">
+              لا يمكن تغيير اسم المستخدم لأسباب أمنية.
+            </p>
           </div>
 
           <div className="h-px bg-gray-100 my-4" />
@@ -145,12 +147,14 @@ function ProfileSecurityView() {
               <label className="block text-sm font-bold text-gray-700">كلمة المرور الحالية</label>
               <div className="relative">
                 <input
-                  type={showPasswords.current ? "text" : "password"}
+                  type={showPasswords.current ? 'text' : 'password'}
                   placeholder="••••••••"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2C94C] focus:border-transparent outline-none transition-all"
                 />
-                <button 
-                  onClick={() => setShowPasswords({...showPasswords, current: !showPasswords.current})}
+                <button
+                  onClick={() =>
+                    setShowPasswords({ ...showPasswords, current: !showPasswords.current })
+                  }
                   className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
                   {showPasswords.current ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -162,12 +166,12 @@ function ProfileSecurityView() {
               <label className="block text-sm font-bold text-gray-700">كلمة المرور الجديدة</label>
               <div className="relative">
                 <input
-                  type={showPasswords.new ? "text" : "password"}
+                  type={showPasswords.new ? 'text' : 'password'}
                   placeholder="••••••••"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2C94C] focus:border-transparent outline-none transition-all"
                 />
-                <button 
-                  onClick={() => setShowPasswords({...showPasswords, new: !showPasswords.new})}
+                <button
+                  onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
                   className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
                   {showPasswords.new ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -176,15 +180,19 @@ function ProfileSecurityView() {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-bold text-gray-700">تأكيد كلمة المرور الجديدة</label>
+              <label className="block text-sm font-bold text-gray-700">
+                تأكيد كلمة المرور الجديدة
+              </label>
               <div className="relative">
                 <input
-                  type={showPasswords.confirm ? "text" : "password"}
+                  type={showPasswords.confirm ? 'text' : 'password'}
                   placeholder="••••••••"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2C94C] focus:border-transparent outline-none transition-all"
                 />
-                <button 
-                  onClick={() => setShowPasswords({...showPasswords, confirm: !showPasswords.confirm})}
+                <button
+                  onClick={() =>
+                    setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })
+                  }
                   className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
                   {showPasswords.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -199,7 +207,7 @@ function ProfileSecurityView() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function DataManagementView({ onStartWizard }: { onStartWizard: () => void }) {
@@ -213,7 +221,10 @@ function DataManagementView({ onStartWizard }: { onStartWizard: () => void }) {
               <Database className="text-[#F2C94C]" size={20} />
               النسخ الاحتياطي
             </h3>
-            <p className="text-gray-500 text-sm max-w-md">قم بتحميل نسخة احتياطية كاملة من قاعدة البيانات للرجوع إليها في أي وقت. نوصي بالقيام بذلك أسبوعياً.</p>
+            <p className="text-gray-500 text-sm max-w-md">
+              قم بتحميل نسخة احتياطية كاملة من قاعدة البيانات للرجوع إليها في أي وقت. نوصي بالقيام
+              بذلك أسبوعياً.
+            </p>
           </div>
           <button className="flex items-center gap-2 bg-white border border-gray-200 text-[#002147] px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-all shadow-sm">
             <CloudDownload size={20} className="text-[#F2C94C]" />
@@ -229,8 +240,11 @@ function DataManagementView({ onStartWizard }: { onStartWizard: () => void }) {
             <FileSpreadsheet className="text-[#F2C94C]" size={32} />
           </div>
           <h3 className="text-xl font-bold text-[#002147] mb-2">استيراد الطلاب من Excel</h3>
-          <p className="text-gray-600 text-sm max-w-md mb-6">يمكنك إضافة مجموعة كبيرة من الطلاب دفعة واحدة من خلال ملف Excel. سيقوم المعالج بمساعدتك في مطابقة البيانات.</p>
-          <button 
+          <p className="text-gray-600 text-sm max-w-md mb-6">
+            يمكنك إضافة مجموعة كبيرة من الطلاب دفعة واحدة من خلال ملف Excel. سيقوم المعالج بمساعدتك
+            في مطابقة البيانات.
+          </p>
+          <button
             onClick={onStartWizard}
             className="bg-[#002147] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#003366] transition-all shadow-md"
           >
@@ -247,7 +261,10 @@ function DataManagementView({ onStartWizard }: { onStartWizard: () => void }) {
               <AlertTriangle size={20} />
               منطقة الخطر: استعادة البيانات
             </h3>
-            <p className="text-red-600/70 text-sm max-w-md">تنبيه: سيؤدي استعادة قاعدة البيانات إلى حذف جميع البيانات الحالية واستبدالها بالبيانات الموجودة في الملف المرفوع.</p>
+            <p className="text-red-600/70 text-sm max-w-md">
+              تنبيه: سيؤدي استعادة قاعدة البيانات إلى حذف جميع البيانات الحالية واستبدالها بالبيانات
+              الموجودة في الملف المرفوع.
+            </p>
           </div>
           <button className="flex items-center gap-2 bg-white border border-red-200 text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-50 transition-all shadow-sm">
             استعادة قاعدة البيانات
@@ -255,14 +272,14 @@ function DataManagementView({ onStartWizard }: { onStartWizard: () => void }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-function GeneralPreferencesView({ 
-  isDarkMode, 
-  setIsDarkMode, 
-  isNotificationsEnabled, 
-  setIsNotificationsEnabled 
+function GeneralPreferencesView({
+  isDarkMode,
+  setIsDarkMode,
+  isNotificationsEnabled,
+  setIsNotificationsEnabled
 }: any) {
   return (
     <div className="space-y-6">
@@ -308,7 +325,9 @@ function GeneralPreferencesView({
               <Printer size={18} className="text-gray-400" />
               إعدادات الطباعة
             </div>
-            <p className="text-xs text-gray-500">اختر الطابعة الافتراضية لطباعة التقارير والبطاقات التعريفية.</p>
+            <p className="text-xs text-gray-500">
+              اختر الطابعة الافتراضية لطباعة التقارير والبطاقات التعريفية.
+            </p>
             <div className="relative">
               <select className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#F2C94C] outline-none">
                 <option>HP LaserJet Pro M404n (المكتب الرئيسي)</option>
@@ -317,17 +336,24 @@ function GeneralPreferencesView({
                 <option>حفظ كملف PDF</option>
               </select>
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-function Toggle({ checked, onChange }: { checked: boolean, onChange: (v: boolean) => void }) {
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <button
       onClick={() => onChange(!checked)}
@@ -341,5 +367,5 @@ function Toggle({ checked, onChange }: { checked: boolean, onChange: (v: boolean
         }`}
       />
     </button>
-  );
+  )
 }

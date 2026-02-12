@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import {
   LayoutDashboard,
   ClipboardCheck,
@@ -11,18 +11,18 @@ import {
   Bell,
   Settings,
   ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+  ChevronRight
+} from 'lucide-react'
 
 interface NavItem {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
+  id: string
+  label: string
+  icon: React.ReactNode
 }
 
 interface DashboardSidebarProps {
-  activeSection?: string;
-  onSectionChange?: (section: string) => void;
+  activeSection?: string
+  onSectionChange?: (section: string) => void
 }
 
 const navItems: NavItem[] = [
@@ -35,11 +35,14 @@ const navItems: NavItem[] = [
   { id: 'reports', label: 'التقارير', icon: <FileText size={20} /> },
   { id: 'custody', label: 'العهدة', icon: <Package size={20} /> },
   { id: 'notifications', label: 'الإشعارات', icon: <Bell size={20} /> },
-  { id: 'settings', label: 'الإعدادات', icon: <Settings size={20} /> },
-];
+  { id: 'settings', label: 'الإعدادات', icon: <Settings size={20} /> }
+]
 
-export function DashboardSidebar({ activeSection = 'dashboard', onSectionChange }: DashboardSidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export function DashboardSidebar({
+  activeSection = 'dashboard',
+  onSectionChange
+}: DashboardSidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
     <div
@@ -49,9 +52,7 @@ export function DashboardSidebar({ activeSection = 'dashboard', onSectionChange 
     >
       {/* Logo Section */}
       <div className="h-16 flex items-center justify-center border-b border-white/10">
-        {!isCollapsed && (
-          <h1 className="text-white text-xl font-bold">نظام الإسكان</h1>
-        )}
+        {!isCollapsed && <h1 className="text-white text-xl font-bold">نظام الإسكان</h1>}
         {isCollapsed && (
           <div className="w-10 h-10 bg-[#F2C94C] rounded-lg flex items-center justify-center">
             <span className="text-[#002147] font-bold text-lg">ن</span>
@@ -73,9 +74,7 @@ export function DashboardSidebar({ activeSection = 'dashboard', onSectionChange 
                 } ${isCollapsed ? 'justify-center' : ''}`}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
-                {!isCollapsed && (
-                  <span className="font-medium text-sm">{item.label}</span>
-                )}
+                {!isCollapsed && <span className="font-medium text-sm">{item.label}</span>}
               </button>
             </li>
           ))}
@@ -93,5 +92,5 @@ export function DashboardSidebar({ activeSection = 'dashboard', onSectionChange 
         </button>
       </div>
     </div>
-  );
+  )
 }

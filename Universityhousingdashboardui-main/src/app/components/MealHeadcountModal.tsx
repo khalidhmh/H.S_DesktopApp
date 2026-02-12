@@ -1,25 +1,37 @@
-import { useState, useMemo } from 'react';
-import { X, Search, Download, Printer, UtensilsCrossed, Users, UserX } from 'lucide-react';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useState, useMemo } from 'react'
+import { X, Search, Download, Printer, UtensilsCrossed, Users, UserX } from 'lucide-react'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts'
 
 type Student = {
-  id: string;
-  name: string;
-  studentId: string;
-  status: boolean | null;
-  roomNumber: string;
-  floor: number;
-  college: string;
-  mealType: 'Regular' | 'Special';
-};
+  id: string
+  name: string
+  studentId: string
+  status: boolean | null
+  roomNumber: string
+  floor: number
+  college: string
+  mealType: 'Regular' | 'Special'
+}
 
 type MealHeadcountModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  allStudentsData: Student[];
-};
+  isOpen: boolean
+  onClose: () => void
+  allStudentsData: Student[]
+}
 
-const COLORS = ['#002147', '#F2C94C', '#10B981', '#3B82F6', '#8B5CF6', '#EF4444'];
+const COLORS = ['#002147', '#F2C94C', '#10B981', '#3B82F6', '#8B5CF6', '#EF4444']
 
 const colleges = [
   'كلية الهندسة',
@@ -27,42 +39,38 @@ const colleges = [
   'كلية العلوم',
   'كلية الآداب',
   'كلية إدارة الأعمال',
-  'كلية الحاسبات',
-];
+  'كلية الحاسبات'
+]
 
-export function MealHeadcountModal({
-  isOpen,
-  onClose,
-  allStudentsData,
-}: MealHeadcountModalProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+export function MealHeadcountModal({ isOpen, onClose, allStudentsData }: MealHeadcountModalProps) {
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Calculate statistics
   const stats = useMemo(() => {
-    const totalPresent = allStudentsData.filter((s) => s.status === true).length;
-    const totalAbsent = allStudentsData.filter((s) => s.status === false).length;
-    const totalUnchecked = allStudentsData.filter((s) => s.status === null).length;
-    
+    const totalPresent = allStudentsData.filter((s) => s.status === true).length
+    const totalAbsent = allStudentsData.filter((s) => s.status === false).length
+    const totalUnchecked = allStudentsData.filter((s) => s.status === null).length
+
     // Eligible for meals = Present students
-    const eligibleStudents = allStudentsData.filter((s) => s.status === true);
-    const eligibleCount = eligibleStudents.length;
-    
+    const eligibleStudents = allStudentsData.filter((s) => s.status === true)
+    const eligibleCount = eligibleStudents.length
+
     // Count by floor
-    const byFloor: Record<number, number> = {};
+    const byFloor: Record<number, number> = {}
     eligibleStudents.forEach((student) => {
-      byFloor[student.floor] = (byFloor[student.floor] || 0) + 1;
-    });
-    
+      byFloor[student.floor] = (byFloor[student.floor] || 0) + 1
+    })
+
     // Count by college
-    const byCollege: Record<string, number> = {};
+    const byCollege: Record<string, number> = {}
     eligibleStudents.forEach((student) => {
-      byCollege[student.college] = (byCollege[student.college] || 0) + 1;
-    });
-    
+      byCollege[student.college] = (byCollege[student.college] || 0) + 1
+    })
+
     // Count meal types
-    const regularMeals = eligibleStudents.filter((s) => s.mealType === 'Regular').length;
-    const specialMeals = eligibleStudents.filter((s) => s.mealType === 'Special').length;
-    
+    const regularMeals = eligibleStudents.filter((s) => s.mealType === 'Regular').length
+    const specialMeals = eligibleStudents.filter((s) => s.mealType === 'Special').length
+
     return {
       totalPresent,
       totalAbsent,
@@ -72,40 +80,40 @@ export function MealHeadcountModal({
       specialMeals,
       eligibleStudents,
       byFloor,
-      byCollege,
-    };
-  }, [allStudentsData]);
+      byCollege
+    }
+  }, [allStudentsData])
 
   // Prepare chart data
   const floorChartData = useMemo(() => {
     return Object.entries(stats.byFloor).map(([floor, count]) => ({
       name: `الطابق ${floor}`,
-      value: count,
-    }));
-  }, [stats.byFloor]);
+      value: count
+    }))
+  }, [stats.byFloor])
 
   const collegeChartData = useMemo(() => {
     return Object.entries(stats.byCollege)
       .map(([college, count]) => ({
         name: college,
-        count: count,
+        count: count
       }))
-      .sort((a, b) => b.count - a.count);
-  }, [stats.byCollege]);
+      .sort((a, b) => b.count - a.count)
+  }, [stats.byCollege])
 
   // Filter students based on search
   const filteredStudents = useMemo(() => {
-    if (!searchQuery.trim()) return stats.eligibleStudents;
-    
-    const query = searchQuery.toLowerCase().trim();
+    if (!searchQuery.trim()) return stats.eligibleStudents
+
+    const query = searchQuery.toLowerCase().trim()
     return stats.eligibleStudents.filter(
       (student) =>
         student.name.toLowerCase().includes(query) ||
         student.studentId.includes(query) ||
         student.roomNumber.includes(query) ||
         student.college.toLowerCase().includes(query)
-    );
-  }, [stats.eligibleStudents, searchQuery]);
+    )
+  }, [stats.eligibleStudents, searchQuery])
 
   const handleExportToKitchen = () => {
     // Generate CSV data
@@ -115,22 +123,22 @@ export function MealHeadcountModal({
         s.name,
         s.roomNumber,
         s.college,
-        s.mealType === 'Regular' ? 'عادية' : 'خاصة',
-      ]),
+        s.mealType === 'Regular' ? 'عادية' : 'خاصة'
+      ])
     ]
       .map((row) => row.join(','))
-      .join('\n');
+      .join('\n')
 
-    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `meal-headcount-${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-  };
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `meal-headcount-${new Date().toISOString().split('T')[0]}.csv`
+    link.click()
+  }
 
   const handlePrint = () => {
-    const printWindow = window.open('', '', 'width=800,height=600');
-    if (!printWindow) return;
+    const printWindow = window.open('', '', 'width=800,height=600')
+    if (!printWindow) return
 
     const content = `
       <!DOCTYPE html>
@@ -202,18 +210,18 @@ export function MealHeadcountModal({
         </div>
       </body>
       </html>
-    `;
+    `
 
-    printWindow.document.write(content);
-    printWindow.document.close();
-    printWindow.focus();
+    printWindow.document.write(content)
+    printWindow.document.close()
+    printWindow.focus()
     setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
-  };
+      printWindow.print()
+      printWindow.close()
+    }, 250)
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -226,9 +234,7 @@ export function MealHeadcountModal({
             </div>
             <div>
               <h2 className="text-2xl font-bold">إحصائيات وعدد الوجبات</h2>
-              <p className="text-sm opacity-90">
-                تقرير شامل لعدد الطلاب المستحقين للوجبات
-              </p>
+              <p className="text-sm opacity-90">تقرير شامل لعدد الطلاب المستحقين للوجبات</p>
             </div>
           </div>
           <button
@@ -249,16 +255,10 @@ export function MealHeadcountModal({
                 <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
                   <Users size={24} className="text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-green-800">
-                  إجمالي الحاضرين
-                </h3>
+                <h3 className="text-lg font-bold text-green-800">إجمالي الحاضرين</h3>
               </div>
-              <p className="text-5xl font-bold text-green-600 mb-2">
-                {stats.totalPresent}
-              </p>
-              <p className="text-sm text-green-700">
-                طالب حاضر في السكن
-              </p>
+              <p className="text-5xl font-bold text-green-600 mb-2">{stats.totalPresent}</p>
+              <p className="text-sm text-green-700">طالب حاضر في السكن</p>
             </div>
 
             {/* Eligible for Meals - HIGHLIGHTED */}
@@ -267,23 +267,13 @@ export function MealHeadcountModal({
                 <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center animate-pulse">
                   <UtensilsCrossed size={24} className="text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-orange-800">
-                  مستحقين للوجبات ⭐
-                </h3>
+                <h3 className="text-lg font-bold text-orange-800">مستحقين للوجبات ⭐</h3>
               </div>
-              <p className="text-6xl font-bold text-orange-600 mb-2">
-                {stats.eligibleCount}
-              </p>
-              <p className="text-sm text-orange-700 font-medium">
-                وجبة مطلوبة للمطبخ
-              </p>
+              <p className="text-6xl font-bold text-orange-600 mb-2">{stats.eligibleCount}</p>
+              <p className="text-sm text-orange-700 font-medium">وجبة مطلوبة للمطبخ</p>
               <div className="mt-3 pt-3 border-t border-orange-300 flex items-center justify-between text-xs">
-                <span className="text-orange-700">
-                  عادية: {stats.regularMeals}
-                </span>
-                <span className="text-orange-700">
-                  خاصة: {stats.specialMeals}
-                </span>
+                <span className="text-orange-700">عادية: {stats.regularMeals}</span>
+                <span className="text-orange-700">خاصة: {stats.specialMeals}</span>
               </div>
             </div>
 
@@ -293,16 +283,12 @@ export function MealHeadcountModal({
                 <div className="w-12 h-12 bg-gray-400 rounded-lg flex items-center justify-center">
                   <UserX size={24} className="text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-700">
-                  غائبين / لا يأكلون
-                </h3>
+                <h3 className="text-lg font-bold text-gray-700">غائبين / لا يأكلون</h3>
               </div>
               <p className="text-5xl font-bold text-gray-600 mb-2">
                 {stats.totalAbsent + stats.totalUnchecked}
               </p>
-              <p className="text-sm text-gray-600">
-                طالب غير مستحق للوجبة
-              </p>
+              <p className="text-sm text-gray-600">طالب غير مستحق للوجبة</p>
             </div>
           </div>
 
@@ -328,10 +314,7 @@ export function MealHeadcountModal({
                       dataKey="value"
                     >
                       {floorChartData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip />
@@ -405,18 +388,10 @@ export function MealHeadcountModal({
                 <thead className="bg-[#002147] text-white sticky top-0">
                   <tr>
                     <th className="px-4 py-3 text-right text-sm font-bold">#</th>
-                    <th className="px-4 py-3 text-right text-sm font-bold">
-                      اسم الطالب
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-bold">
-                      رقم الغرفة
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-bold">
-                      الكلية
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-bold">
-                      نوع الوجبة
-                    </th>
+                    <th className="px-4 py-3 text-right text-sm font-bold">اسم الطالب</th>
+                    <th className="px-4 py-3 text-right text-sm font-bold">رقم الغرفة</th>
+                    <th className="px-4 py-3 text-right text-sm font-bold">الكلية</th>
+                    <th className="px-4 py-3 text-right text-sm font-bold">نوع الوجبة</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -428,25 +403,17 @@ export function MealHeadcountModal({
                           index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                         } hover:bg-[#F2C94C]/10 transition-colors`}
                       >
-                        <td className="px-4 py-3 text-sm text-gray-600">
-                          {index + 1}
-                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600">{index + 1}</td>
                         <td className="px-4 py-3">
                           <div>
-                            <p className="text-sm font-medium text-[#002147]">
-                              {student.name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {student.studentId}
-                            </p>
+                            <p className="text-sm font-medium text-[#002147]">{student.name}</p>
+                            <p className="text-xs text-gray-500">{student.studentId}</p>
                           </div>
                         </td>
                         <td className="px-4 py-3 text-sm font-medium text-gray-700">
                           {student.roomNumber}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-600">
-                          {student.college}
-                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600">{student.college}</td>
                         <td className="px-4 py-3">
                           <span
                             className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
@@ -462,13 +429,8 @@ export function MealHeadcountModal({
                     ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan={5}
-                        className="px-4 py-8 text-center text-gray-400"
-                      >
-                        {searchQuery
-                          ? 'لا توجد نتائج للبحث'
-                          : 'لا يوجد طلاب مستحقين للوجبات'}
+                      <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
+                        {searchQuery ? 'لا توجد نتائج للبحث' : 'لا يوجد طلاب مستحقين للوجبات'}
                       </td>
                     </tr>
                   )}
@@ -485,7 +447,7 @@ export function MealHeadcountModal({
               تم إنشاء التقرير في:{' '}
               {new Date().toLocaleString('ar-EG', {
                 dateStyle: 'medium',
-                timeStyle: 'short',
+                timeStyle: 'short'
               })}
             </p>
           </div>
@@ -508,5 +470,5 @@ export function MealHeadcountModal({
         </div>
       </div>
     </div>
-  );
+  )
 }

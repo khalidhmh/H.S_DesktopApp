@@ -1,45 +1,51 @@
-import { useState } from 'react';
-import { X, AlertTriangle, CheckCircle, Copy, Shield } from 'lucide-react';
+import { useState } from 'react'
+import { X, AlertTriangle, CheckCircle, Copy, Shield } from 'lucide-react'
 
 interface SecurityChallengeModalProps {
-  studentNationalId: string;
-  onClose: () => void;
+  studentNationalId: string
+  onClose: () => void
 }
 
-export function SecurityChallengeModal({ studentNationalId, onClose }: SecurityChallengeModalProps) {
-  const [inputId, setInputId] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
-  const [generatedPassword, setGeneratedPassword] = useState('');
-  const [showCopySuccess, setShowCopySuccess] = useState(false);
+export function SecurityChallengeModal({
+  studentNationalId,
+  onClose
+}: SecurityChallengeModalProps) {
+  const [inputId, setInputId] = useState('')
+  const [isVerified, setIsVerified] = useState(false)
+  const [generatedPassword, setGeneratedPassword] = useState('')
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
 
   const handleVerify = () => {
     if (inputId === studentNationalId) {
       // Generate a random password
-      const password = generatePassword();
-      setGeneratedPassword(password);
-      setIsVerified(true);
+      const password = generatePassword()
+      setGeneratedPassword(password)
+      setIsVerified(true)
     } else {
-      alert('الرقم القومي غير صحيح. الرجاء المحاولة مرة أخرى.');
+      alert('الرقم القومي غير صحيح. الرجاء المحاولة مرة أخرى.')
     }
-  };
+  }
 
   const generatePassword = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$%&*';
-    let password = '';
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#$%&*'
+    let password = ''
     for (let i = 0; i < 8; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
+      password += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    return password;
-  };
+    return password
+  }
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(generatedPassword);
-    setShowCopySuccess(true);
-    setTimeout(() => setShowCopySuccess(false), 2000);
-  };
+    navigator.clipboard.writeText(generatedPassword)
+    setShowCopySuccess(true)
+    setTimeout(() => setShowCopySuccess(false), 2000)
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4"
+      onClick={onClose}
+    >
       <div
         className={`bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border-4 ${
           isVerified ? 'border-green-500' : 'border-red-500'
@@ -75,7 +81,10 @@ export function SecurityChallengeModal({ studentNationalId, onClose }: SecurityC
                 <Shield className="text-red-600 flex-shrink-0 mt-1" size={24} />
                 <div className="text-sm text-red-800">
                   <p className="font-bold mb-1">تحذير هام:</p>
-                  <p>هذا الإجراء سيقوم بإعادة تعيين كلمة مرور الطالب بشكل نهائي. للمتابعة، يجب إدخال الرقم القومي للطالب للتحقق من الهوية.</p>
+                  <p>
+                    هذا الإجراء سيقوم بإعادة تعيين كلمة مرور الطالب بشكل نهائي. للمتابعة، يجب إدخال
+                    الرقم القومي للطالب للتحقق من الهوية.
+                  </p>
                 </div>
               </div>
 
@@ -98,7 +107,8 @@ export function SecurityChallengeModal({ studentNationalId, onClose }: SecurityC
               {/* Footer Note */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <p className="text-sm text-gray-700">
-                  <span className="font-bold text-[#002147]">ملاحظة:</span> سيتم تسجيل هذا الإجراء بشكل دائم تحت معرف المستخدم الخاص بك
+                  <span className="font-bold text-[#002147]">ملاحظة:</span> سيتم تسجيل هذا الإجراء
+                  بشكل دائم تحت معرف المستخدم الخاص بك
                 </p>
               </div>
             </div>
@@ -215,5 +225,5 @@ export function SecurityChallengeModal({ studentNationalId, onClose }: SecurityC
         )}
       </div>
     </div>
-  );
+  )
 }
