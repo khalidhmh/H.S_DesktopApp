@@ -5,6 +5,7 @@ import { PenaltyService } from '../services/penalty.service'
 import { InventoryService } from '../services/inventory.service'
 import { exportToCSV } from '../utils/exportUtils'
 import { format } from 'date-fns'
+import { logger } from '@shared/utils/logger'
 
 export type ReportType = 'students' | 'attendance' | 'penalties' | 'inventory'
 
@@ -182,7 +183,7 @@ export const useReportStore = create<ReportState>((set, get) => ({
 
       set({ previewData: data, isGenerating: false })
     } catch (error) {
-      console.error('Failed to generate report:', error)
+      logger.error('Failed to generate report:', error)
       set({ isGenerating: false, previewData: [] })
     }
   },
@@ -206,7 +207,7 @@ export const useReportStore = create<ReportState>((set, get) => ({
     const { previewData, reportType } = get()
     
     if (!previewData || previewData.length === 0) {
-      console.warn('No data to export')
+      logger.warn('No data to export')
       return
     }
 
@@ -242,7 +243,7 @@ export const useReportStore = create<ReportState>((set, get) => ({
 
       exportToCSV(data, `تقرير_الطلاب_${format(new Date(), 'yyyy-MM-dd')}`)
     } catch (error) {
-      console.error('Failed to generate student report:', error)
+      logger.error('Failed to generate student report:', error)
     } finally {
       set({ isGenerating: false })
     }
@@ -264,7 +265,7 @@ export const useReportStore = create<ReportState>((set, get) => ({
 
       exportToCSV(data, `تقرير_الغياب_${format(new Date(), 'yyyy-MM-dd')}`)
     } catch (error) {
-      console.error('Failed to generate attendance report:', error)
+      logger.error('Failed to generate attendance report:', error)
     } finally {
       set({ isGenerating: false })
     }
@@ -286,7 +287,7 @@ export const useReportStore = create<ReportState>((set, get) => ({
 
       exportToCSV(data, `سجل_المخالفات_${format(new Date(), 'yyyy-MM-dd')}`)
     } catch (error) {
-      console.error('Failed to generate penalty report:', error)
+      logger.error('Failed to generate penalty report:', error)
     } finally {
       set({ isGenerating: false })
     }

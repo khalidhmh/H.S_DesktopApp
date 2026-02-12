@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { PenaltyService } from '../services/penalty.service'
 import { Penalty } from '@prisma/client'
+import { logger } from '@shared/utils/logger'
 
 interface PenaltyState {
   penalties: Penalty[]
@@ -21,7 +22,7 @@ export const usePenaltyStore = create<PenaltyState>((set, get) => ({
       const penalties = await PenaltyService.getPenaltiesByStudent(studentId)
       set({ penalties, isLoading: false })
     } catch (error) {
-      console.error('Error fetching student penalties:', error)
+      logger.error('Error fetching student penalties:', error)
       set({ isLoading: false })
     }
   },
@@ -32,7 +33,7 @@ export const usePenaltyStore = create<PenaltyState>((set, get) => ({
       // Refresh list if we are currently viewing this student
       get().fetchStudentPenalties(studentId)
     } catch (error) {
-      console.error('Error issuing penalty:', error)
+      logger.error('Error issuing penalty:', error)
       throw error
     }
   },
@@ -43,7 +44,7 @@ export const usePenaltyStore = create<PenaltyState>((set, get) => ({
       const penalties = await PenaltyService.getAllPenalties()
       set({ penalties, isLoading: false })
     } catch (error) {
-      console.log('Error fetching all penalties:', error)
+      logger.info('Error fetching all penalties:', error)
       set({ isLoading: false })
     }
   }

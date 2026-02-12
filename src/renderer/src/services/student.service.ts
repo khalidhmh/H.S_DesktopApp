@@ -4,6 +4,14 @@ export const StudentService = {
     return await window.api.getAllStudents()
   },
 
+  getStudentsPaginated: async (
+    page: number,
+    limit: number,
+    filters?: any
+  ) => {
+    return await window.api.getStudentsPaginated(page, limit, filters)
+  },
+
   // Get By ID
   getStudentById: async (id: number) => {
     return await window.api.getStudentById(id)

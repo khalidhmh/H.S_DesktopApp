@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { InventoryService, InventoryItem } from '../services/inventory.service'
 import { useStudentStore } from './useStudentStore'
+import { logger } from '@shared/utils/logger'
 
 export interface InventoryItemWithStats extends InventoryItem {
   usedQuantity: number
@@ -33,7 +34,7 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
       const items = await InventoryService.getAll()
       set({ items, isLoading: false })
     } catch (error) {
-      console.error('Failed to fetch inventory:', error)
+      logger.error('Failed to fetch inventory:', error)
       set({ error: 'فشل تحميل البيانات', isLoading: false })
     }
   },
@@ -49,7 +50,7 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
         )
       }))
     } catch (error) {
-      console.error('Failed to update quantity:', error)
+      logger.error('Failed to update quantity:', error)
       set({ error: 'فشل تحديث الكمية' })
     }
   },
@@ -63,7 +64,7 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
         isLoading: false
       }))
     } catch (error) {
-      console.error('Failed to add item:', error)
+      logger.error('Failed to add item:', error)
       set({ error: 'فشل إضافة الصنف', isLoading: false })
     }
   },
@@ -75,7 +76,7 @@ export const useInventoryStore = create<InventoryState>((set, get) => ({
         items: state.items.filter((item) => item.id !== id)
       }))
     } catch (error) {
-      console.error('Failed to delete item:', error)
+      logger.error('Failed to delete item:', error)
       set({ error: 'فشل حذف الصنف' })
     }
   },

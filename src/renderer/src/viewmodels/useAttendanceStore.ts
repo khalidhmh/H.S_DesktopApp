@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { logger } from '@shared/utils/logger'
 
 export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'EXCUSED' | null
 export type RoomType = 'STANDARD' | 'PREMIUM'
@@ -302,7 +303,7 @@ export const useAttendanceStore = create<AttendanceState>((set, get) => ({
     // Simulate API call
     return new Promise((resolve) => {
       setTimeout(() => {
-        console.log('Session ended, data saved')
+        logger.info('Session ended, data saved')
         set({
           sessionActive: false,
           sessionStartTime: null,

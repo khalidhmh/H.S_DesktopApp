@@ -1,14 +1,28 @@
-import { resolve } from 'path'
-import { defineConfig } from 'electron-vite'
+import { join } from 'path'
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  main: {},
-  preload: {},
+  main: {
+    plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        '@shared': join(process.cwd(), 'src/shared')
+      }
+    }
+  },
+  preload: {
+    resolve: {
+      alias: {
+        '@shared': join(process.cwd(), 'src/shared')
+      }
+    }
+  },
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': join(process.cwd(), 'src/renderer/src'),
+        '@shared': join(process.cwd(), 'src/shared')
       }
     },
     define: {

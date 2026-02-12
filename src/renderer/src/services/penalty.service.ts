@@ -1,9 +1,10 @@
+import { logger } from '@shared/utils/logger'
 export const PenaltyService = {
   addPenalty: async (studentId: number, data: { reason: string; type: string }) => {
     try {
       return await window.api.addPenalty(studentId, data)
     } catch (error) {
-      console.error('Error adding penalty:', error)
+      logger.error('Error adding penalty:', error)
       throw error
     }
   },
@@ -17,7 +18,7 @@ export const PenaltyService = {
         date: new Date(p.date)
       }))
     } catch (error) {
-      console.error('Error fetching student penalties:', error)
+      logger.error('Error fetching student penalties:', error)
       throw error
     }
   },
@@ -30,7 +31,7 @@ export const PenaltyService = {
         date: new Date(p.date)
       }))
     } catch (error) {
-      console.error('Error fetching all penalties', error)
+      logger.error('Error fetching all penalties', error)
       throw error
     }
   }

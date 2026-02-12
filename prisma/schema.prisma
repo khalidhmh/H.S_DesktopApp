@@ -35,6 +35,8 @@ model Student {
   attendance      Attendance[]
   penalties       Penalty[]
   complaints      Complaint[]
+  
+  @@index([status])  // ✅ For filtering active/evacuated students
 }
 
 model Room {
@@ -50,6 +52,8 @@ model Room {
   faults       MaintenanceFault[]
 
   @@unique([roomNumber, building])
+  @@index([building, floor])  // ✅ For filtering by building and floor
+  @@index([status])           // ✅ For finding available rooms
 }
 
 model Attendance {
@@ -60,6 +64,9 @@ model Attendance {
   
   studentId Int
   student   Student  @relation(fields: [studentId], references: [id])
+  
+  @@index([date])      // ✅ For date-based queries
+  @@index([studentId]) // ✅ For student attendance history
 }
 
 model Complaint {
@@ -103,4 +110,44 @@ model SystemLog {
   timestamp DateTime @default(now())
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+}
+
+// --- New Models for Phase 2: Database Integration ---
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  type      String   // "NEW_STUDENT", "EMERGENCY", "SYSTEM_UPDATE", "ANNOUNCEMENT"
+  title     String
+  message   String
+  timestamp DateTime @default(now())
+  isRead    Boolean  @default(false)
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  
+  @@index([userId, isRead])
+}
+
+model Memorandum {
+  id            Int      @id @default(autoincrement())
+  title         String
+  target        String   // "ALL", "BUILDING", "FLOOR"
+  targetDetails String?  // Building name or floor number
+  importance    String   // "NORMAL", "URGENT"
+  content       String
+  createdAt     DateTime @default(now())
+  createdById   Int
+  createdBy     User     @relation(fields: [createdById], references: [id])
+  
+  @@index([createdAt])
+}
+
+model InventoryItem {
+  id            Int     @id @default(autoincrement())
+  name          String
+  category      String
+  totalQuantity Int
+  perStudent    Boolean
+  icon          String
+  
+  @@index([category])
 }

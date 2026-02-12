@@ -1,3 +1,4 @@
+import { logger } from '@shared/utils/logger'
 export const RoomService = {
   /**
    * Get all rooms for a specific building
@@ -6,7 +7,7 @@ export const RoomService = {
     try {
       return await window.api.getRoomsByBuilding(buildingName)
     } catch (error) {
-      console.error(`Error fetching rooms for building ${buildingName}:`, error)
+      logger.error(`Error fetching rooms for building ${buildingName}:`, error)
       throw error
     }
   },
@@ -18,7 +19,7 @@ export const RoomService = {
     try {
       return await window.api.getRoomDetails(roomId)
     } catch (error) {
-      console.error(`Error fetching room details for room ${roomId}:`, error)
+      logger.error(`Error fetching room details for room ${roomId}:`, error)
       throw error
     }
   },
@@ -30,7 +31,7 @@ export const RoomService = {
     try {
       return await window.api.updateRoomStatus(roomId, status)
     } catch (error) {
-      console.error(`Error updating room status for room ${roomId}:`, error)
+      logger.error(`Error updating room status for room ${roomId}:`, error)
       throw error
     }
   },
@@ -42,7 +43,7 @@ export const RoomService = {
     try {
       return await window.api.searchRooms(query)
     } catch (error) {
-      console.error('Error searching rooms:', error)
+      logger.error('Error searching rooms:', error)
       return []
     }
   }

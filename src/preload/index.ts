@@ -2,8 +2,13 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
+  // Authentication
+  login: (email: string, password: string) => ipcRenderer.invoke('auth:login', { email, password }),
+
   // Students
   getAllStudents: () => ipcRenderer.invoke('students:get-all'),
+  getStudentsPaginated: (page: number, limit: number, filters?: any) =>
+    ipcRenderer.invoke('students:get-all-paginated', { page, limit, ...filters }),
   getStudentById: (id: number) => ipcRenderer.invoke('students:get-by-id', id),
   searchStudents: (query: string) => ipcRenderer.invoke('students:search', query),
   addStudent: (data: any) => ipcRenderer.invoke('students:add', data),
@@ -42,6 +47,22 @@ const api = {
 
   // Dashboard
   getDashboardStats: (role: string) => ipcRenderer.invoke('dashboard:get-stats', role),
+
+  // Notifications
+  getNotifications: (userId?: number) => ipcRenderer.invoke('notifications:get-all', userId),
+  markNotificationAsRead: (id: number) => ipcRenderer.invoke('notifications:mark-read', id),
+  createNotification: (data: any) => ipcRenderer.invoke('notifications:create', data),
+
+  // Memorandums
+  getMemos: () => ipcRenderer.invoke('memos:get-all'),
+  createMemo: (data: any) => ipcRenderer.invoke('memos:create', data),
+
+  // Inventory
+  getInventory: () => ipcRenderer.invoke('inventory:get-all'),
+  updateInventoryQuantity: (id: number, quantity: number) =>
+    ipcRenderer.invoke('inventory:update-quantity', { id, quantity }),
+  addInventoryItem: (data: any) => ipcRenderer.invoke('inventory:add-item', data),
+  deleteInventoryItem: (id: number) => ipcRenderer.invoke('inventory:delete-item', id),
 
   // Settings
   updatePassword: (userId: number, newPassword: string) =>

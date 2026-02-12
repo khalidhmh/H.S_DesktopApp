@@ -1,17 +1,23 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
   console.log('🌱 Starting seeding...')
 
+  // Hash password '123456'
+  const hashedPassword = bcrypt.hashSync('123456', 10)
+
   // 1. إنشاء المستخدمين (Manager & Supervisor)
   const manager = await prisma.user.upsert({
     where: { email: 'manager@system.com' },
-    update: {},
+    update: {
+      password: hashedPassword // Update password even if exists
+    },
     create: {
       email: 'manager@system.com',
-      password: '123',
+      password: hashedPassword,
       name: 'System Manager',
       role: 'MANAGER'
     }
@@ -19,10 +25,12 @@ async function main() {
 
   const supervisor = await prisma.user.upsert({
     where: { email: 'supervisor@system.com' },
-    update: {},
+    update: {
+      password: hashedPassword // Update password even if exists
+    },
     create: {
       email: 'supervisor@system.com',
-      password: '123',
+      password: hashedPassword,
       name: 'Building Supervisor',
       role: 'SUPERVISOR'
     }

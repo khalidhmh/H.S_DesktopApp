@@ -1,3 +1,5 @@
+import { logger } from '@shared/utils/logger'
+
 /**
  * Converts an array of objects to CSV format and triggers a download.
  * Adds a BOM (Byte Order Mark) to ensure Excel opens Arabic characters correctly.
@@ -7,7 +9,7 @@
  */
 export const exportToCSV = (data: any[], filename: string) => {
   if (!data || !data.length) {
-    console.warn('No data to export')
+    logger.warn('No data to export')
     return
   }
 

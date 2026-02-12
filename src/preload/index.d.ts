@@ -4,8 +4,16 @@ declare global {
   interface Window {
     electron: ElectronAPI
     api: {
+      // Authentication
+      login: (email: string, password: string) => Promise<any>
+
       // Students
       getAllStudents: () => Promise<any[]>
+      getStudentsPaginated: (
+        page: number,
+        limit: number,
+        filters?: any
+      ) => Promise<{ students: any[]; total: number; page: number; totalPages: number }>
       getStudentById: (id: number) => Promise<any>
       searchStudents: (query: string) => Promise<any[]>
       addStudent: (data: any) => Promise<any>
@@ -43,6 +51,21 @@ declare global {
       updatePassword: (userId: number, newPassword: string) => Promise<void>
       resetSystem: () => Promise<void>
       getSystemBackup: () => Promise<any>
+
+      // Notifications
+      getNotifications: (userId?: number) => Promise<any[]>
+      markNotificationAsRead: (id: number) => Promise<void>
+      createNotification: (data: any) => Promise<any>
+
+      // Memorandums
+      getMemos: () => Promise<any[]>
+      createMemo: (data: any) => Promise<any>
+
+      // Inventory
+      getInventory: () => Promise<any[]>
+      updateInventoryQuantity: (id: number, quantity: number) => Promise<any>
+      addInventoryItem: (data: any) => Promise<any>
+      deleteInventoryItem: (id: number) => Promise<any>
     }
   }
 }

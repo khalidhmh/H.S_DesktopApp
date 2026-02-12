@@ -1,3 +1,5 @@
+import { logger } from '@shared/utils/logger'
+
 export type IssueType = 'COMPLAINT' | 'MAINTENANCE'
 
 export interface Issue {
@@ -28,7 +30,7 @@ export const ComplaintService = {
         createdAt: new Date(i.createdAt)
       }))
     } catch (error) {
-      console.error('Error fetching issues:', error)
+      logger.error('Error fetching issues:', error)
       throw error
     }
   },
@@ -56,7 +58,7 @@ export const ComplaintService = {
     try {
       await window.api.resolveIssue(id, type)
     } catch (error) {
-      console.error(`Error resolving issue ${id} (${type}):`, error)
+      logger.error(`Error resolving issue ${id} (${type}):`, error)
       throw error
     }
   },

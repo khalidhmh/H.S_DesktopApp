@@ -1,3 +1,4 @@
+import { logger } from '@shared/utils/logger'
 export interface InventoryItem {
   id: string
   name: string
@@ -70,7 +71,7 @@ export const InventoryService = {
 
       return JSON.parse(stored)
     } catch (error) {
-      console.error('Failed to load inventory:', error)
+      logger.error('Failed to load inventory:', error)
       return SEED_DATA
     }
   },
@@ -87,7 +88,7 @@ export const InventoryService = {
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
     } catch (error) {
-      console.error('Failed to update inventory quantity:', error)
+      logger.error('Failed to update inventory quantity:', error)
       throw error
     }
   },
@@ -108,7 +109,7 @@ export const InventoryService = {
 
       return newItem
     } catch (error) {
-      console.error('Failed to add inventory item:', error)
+      logger.error('Failed to add inventory item:', error)
       throw error
     }
   },
@@ -123,7 +124,7 @@ export const InventoryService = {
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered))
     } catch (error) {
-      console.error('Failed to delete inventory item:', error)
+      logger.error('Failed to delete inventory item:', error)
       throw error
     }
   },

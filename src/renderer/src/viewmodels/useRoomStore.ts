@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { RoomService } from '../services/room.service'
+import { logger } from '@shared/utils/logger'
 
 export type RoomType = 'STANDARD' | 'PREMIUM'
 export type Wing = 'A' | 'B' | 'C' | 'D'
@@ -50,9 +52,10 @@ interface RoomState {
   selectedWing: Wing | 'ALL'
   searchQuery: string
   isLoading: boolean
+  error: string | null
 
   // Actions
-  fetchRooms: () => void
+  fetchRooms: () => Promise<void>
   getRoomDetails: (roomId: number) => RoomWithOccupancy | null
   assignStudentToRoom: (roomId: number, bedNumber: number, studentData: Omit<StudentInRoom, 'id' | 'roomNumber' | 'bedNumber'>) => Promise<void>
   removeStudentFromRoom: (studentId: number) => void
@@ -70,69 +73,6 @@ interface RoomState {
   }
 }
 
-// Generate rooms for one floor (same logic as attendance)
-const generateFloorRooms = (floor: number): RoomWithOccupancy[] => {
-  const rooms: RoomWithOccupancy[] = []
-  let roomIdCounter = (floor - 1) * 30 + 1
-
-  // Wing A: X01-X06
-  for (let i = 1; i <= 6; i++) {
-    const roomNum = floor * 100 + i
-    rooms.push(createRoom(roomIdCounter++, String(roomNum), floor, 'A'))
-  }
-
-  // Wing B: X08-X12
-  for (let i = 8; i <= 12; i++) {
-    const roomNum = floor * 100 + i
-    rooms.push(createRoom(roomIdCounter++, String(roomNum), floor, 'B'))
-  }
-
-  // Wing C: X14-X19
-  for (let i = 14; i <= 19; i++) {
-    const roomNum = floor * 100 + i
-    rooms.push(createRoom(roomIdCounter++, String(roomNum), floor, 'C'))
-  }
-
-  // Wing D: X21-X25
-  for (let i = 21; i <= 25; i++) {
-    const roomNum = floor * 100 + i
-    rooms.push(createRoom(roomIdCounter++, String(roomNum), floor, 'D'))
-  }
-
-  return rooms
-}
-
-const createRoom = (id: number, number: string, floor: number, wing: Wing): RoomWithOccupancy => {
-  const type: RoomType = Math.random() > 0.2 ? 'STANDARD' : 'PREMIUM'
-  const capacity = type === 'STANDARD' ? 3 : 2
-
-  // No students initially - will be added via UI
-  const students: StudentInRoom[] = []
-
-  return {
-    id,
-    number,
-    floor,
-    wing,
-    type,
-    capacity,
-    occupiedBeds: students.length,
-    students,
-    availableBeds: capacity - students.length
-  }
-}
-
-// Generate all building rooms
-const generateAllRooms = (): RoomWithOccupancy[] => {
-  const allRooms: RoomWithOccupancy[] = []
-  for (let floor = 1; floor <= 6; floor++) {
-    allRooms.push(...generateFloorRooms(floor))
-  }
-  return allRooms
-}
-
-const MOCK_ROOMS = generateAllRooms()
-
 let nextStudentId = 1000
 
 export const useRoomStore = create<RoomState>((set, get) => ({
@@ -141,15 +81,25 @@ export const useRoomStore = create<RoomState>((set, get) => ({
   selectedWing: 'ALL',
   searchQuery: '',
   isLoading: false,
+  error: null,
 
-  fetchRooms: () => {
-    set({ isLoading: true })
-    setTimeout(() => {
+  fetchRooms: async () => {
+    set({ isLoading: true, error: null })
+    try {
+      // Fetch all rooms from database
+      const rooms = await RoomService.searchRooms('')
       set({
-        rooms: MOCK_ROOMS,
+        rooms: rooms as RoomWithOccupancy[],
         isLoading: false
       })
-    }, 300)
+    } catch (error) {
+      logger.error('Failed to fetch rooms:', error)
+      set({
+        isLoading: false,
+        error: 'Failed to fetch rooms from database',
+        rooms: []
+      })
+    }
   },
 
   getRoomDetails: (roomId: number) => {

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { ComplaintService, Issue, IssueType } from '../services/complaint.service'
+import { logger } from '@shared/utils/logger'
 
 interface ComplaintState {
   issues: Issue[]
@@ -49,7 +50,7 @@ export const useComplaintStore = create<ComplaintState>((set, get) => ({
         set({ urgentCount: urgent })
       }
     } catch (error) {
-      console.error('Error fetching issues:', error)
+      logger.error('Error fetching issues:', error)
       set({ isLoading: false })
     }
   },
@@ -65,7 +66,7 @@ export const useComplaintStore = create<ComplaintState>((set, get) => ({
       // Refresh list
       get().fetchIssues()
     } catch (error) {
-      console.error('Error resolving issue:', error)
+      logger.error('Error resolving issue:', error)
     }
   },
 
@@ -74,7 +75,7 @@ export const useComplaintStore = create<ComplaintState>((set, get) => ({
       await ComplaintService.createComplaint(data)
       get().fetchIssues()
     } catch (error) {
-      console.error('Error reporting complaint:', error)
+      logger.error('Error reporting complaint:', error)
       throw error
     }
   },
@@ -84,7 +85,7 @@ export const useComplaintStore = create<ComplaintState>((set, get) => ({
       await ComplaintService.createMaintenanceFault(data)
       get().fetchIssues()
     } catch (error) {
-      console.error('Error reporting maintenance:', error)
+      logger.error('Error reporting maintenance:', error)
       throw error
     }
   },
@@ -94,7 +95,7 @@ export const useComplaintStore = create<ComplaintState>((set, get) => ({
       const { urgentCount, recent } = await ComplaintService.getStats()
       set({ urgentCount, recentComplaints: recent || [] })
     } catch (error) {
-      console.error('Error fetching stats:', error)
+      logger.error('Error fetching stats:', error)
     }
   }
 }))

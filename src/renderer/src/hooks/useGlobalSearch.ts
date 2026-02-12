@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { StudentService } from '../services/student.service'
 import { RoomService } from '../services/room.service'
+import { logger } from '@shared/utils/logger'
 
 interface SearchResult {
   students: any[]
@@ -27,7 +28,7 @@ export const useGlobalSearch = (query: string) => {
         ])
         setResults({ students, rooms })
       } catch (error) {
-        console.error('Global search failed:', error)
+        logger.error('Global search failed:', error)
       } finally {
         setLoading(false)
       }
